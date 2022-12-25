@@ -86,7 +86,9 @@
     "type_traits": "cpp",
     "typeinfo": "cpp",
     "variant": "cpp",
-    "vector": "cpp"
+    "vector": "cpp",
+    "numeric": "cpp",
+    "random": "cpp"
   },
   "C_Cpp.errorSquiggles": "disabled"
 }
