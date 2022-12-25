@@ -4,32 +4,21 @@
 #include <iostream>
 #include<tuple>
 #include <vector>
+#include "particle.hpp"
+using namespace std;
+#include <cstdlib>  // for rand and srand
+#include <ctime>    // for time
 
-extern int worldsize[2];
-extern int chunk_size;
-extern particles allp[30];
+int random_in_range(int lower_bound, int upper_bound) {
+    // Seed the random number generator with the current time
+    srand(time(nullptr));
 
-//this puts all particles on a chunk map to boost preformance
-std::vector<std::vector<std::vector<int>>> chunk()
-{
-    std::vector<std::vector<std::vector<int>>> map(worldsize[0], std::vector<std::vector<int>>(worldsize[0]));;
-    
-    int cx;
-    int cy;
-    int len;
-    for (int i = 0; i < numbers.size(allp); i++)
-    {
-        cx = allp[i].x / chunk_size;
-        cy = allp[i].y / chunk_size;
-        
-        //len = sizeof(map[cx][cy]) / sizeof(map[cx][cy]);
-        map[cx][cy].push_back(i);
-    }
+    // Generate a random number between lower_bound and upper_bound, inclusive
+    int random_number = lower_bound + std::rand() % (upper_bound - lower_bound + 1);
 
-
-    return(map);
-
+    return random_number;
 }
+
 
 
 
