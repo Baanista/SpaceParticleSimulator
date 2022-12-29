@@ -4,6 +4,8 @@
 //#include "jsoncpp-master/include/json/json.h"
 extern int worldsize[2];
 extern int chunk_size;
+#include <iostream>
+using namespace std;
 
 //this is the class for a defalt particle
 class particles
@@ -45,7 +47,7 @@ class particles
                 x = 1;
                 vx *= -1;
             } else if (x > chunk_size*worldsize[0]) {
-                x = chunk_size*worldsize[0] -1 ;
+                x = chunk_size*worldsize[0] -1;
                 vx *= -1;
             } else if (y < 0) {
                 y = 1;
@@ -54,17 +56,34 @@ class particles
                 y = chunk_size*worldsize[1] - 1;
                 vy *= -1;
             }
-
         }
+        
+        void addgravvelocity(double ox, double oy, double attraction)
+        {
+
+            double dist = sqrt((x - ox)*(x - ox) + (y - oy)*(y - oy));
+
+            //cout << dist << endl;
+            
+            double div = attraction / dist;
+
+            vx += ((x - ox) * div);
+            vy += ((y - oy) * div);
+
+            
+        }
+
         //changes velocity
         void addvelocity(double ox, double oy, double attraction)
         {
             double dist = sqrt((x - ox)*(x - ox) + (y - oy)*(y - oy));
 
             //cout << dist << endl;
+            
+            double div = dist / attraction;
 
-            vx += ((x - ox) / ((dist / attraction)));
-            vy += ((y - oy) / ((dist / attraction)));
+            vx += ((x - ox) / div);
+            vy += ((y - oy) / div);
         }
 
         //this function moves the particle to a location in one step depending on the attraction value
