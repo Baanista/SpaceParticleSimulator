@@ -12,8 +12,8 @@
 #include <chrono>
 using namespace std;
 
-int worldsize[2] = {10, 6};
-int chunk_size = 100;
+int worldsize[2] = {20, 12};
+int chunk_size = 50;
 vector<particles> allp;
 
 vector<vector<vector<int> > > chunk()
@@ -37,18 +37,18 @@ vector<vector<vector<int> > > chunk()
 
 }
 
-vector<vector<int> > defalt_gmap()
+vector<vector<double> > defalt_gmap()
 {
-    vector<vector<int> > vec(worldsize[0], vector<int>(worldsize[1]));
+    vector<vector<double> > vec(worldsize[0], vector<double>(worldsize[1]));
     for (int j = 0; j < worldsize[0]; j++) {
-      std::fill(vec[j].begin(), vec[j].end(), 0);
+      std::fill(vec[j].begin(), vec[j].end(), 0.0);
     }
     return vec;
 }
-vector<vector<vector<int> > > vel_gmap()
+vector<vector<vector<double> > > vel_gmap()
 {
     //vector<vector<vector<int> > > vec(worldsize[0], vector<vector<int> >(worldsize[1], vector<int>(2)));
-    std::vector<std::vector<std::vector<int> > > vec(worldsize[0], std::vector<std::vector<int> >(worldsize[1], std::vector<int>(2)));
+    std::vector<std::vector<std::vector<double> > > vec(worldsize[0], std::vector<std::vector<double> >(worldsize[1], std::vector<double>(2)));
 
     for (int x = 0; x < worldsize[0]; x++)
     {
@@ -68,10 +68,10 @@ int main()
 {
     int randomthing = random_in_range(0, 10);
     cout << randomthing << endl;
-    vector<vector<int> > dgmap = defalt_gmap();
-    vector<vector<int> > gmap = dgmap;
-    vector<vector<vector<int> > > dvelmap = vel_gmap();
-    vector<vector<vector<int> > > velmap;
+    vector<vector<double> > dgmap = defalt_gmap();
+    vector<vector<double> > gmap = dgmap;
+    vector<vector<vector<double> > > dvelmap = vel_gmap();
+    vector<vector<vector<double> > > velmap = velocityfeild(gmap, worldsize, chunk_size, dvelmap);;
 
     sf::RenderWindow window(sf::VideoMode(1000, 600), "Space Particles");
     window.setVisible(true);
@@ -88,18 +88,20 @@ int main()
     //vector<vector<vector<int> > > map = chunk();
     vector<particles> allp;  
     
-    for (int i = 0; i < 200; i++)
+    /*for (int i = 0; i < 250; i++)
     {
-        for (int a = 0; a < 120; a++)
+        for (int a = 0; a < 150; a++)
         {
         allp.push_back(particles());
-        allp[allp.size() - 1].x = i * 5;
-        allp[allp.size() - 1].y = a * 5;
+        allp[allp.size() - 1].x = i*4;
+        allp[allp.size() - 1].y = a*4;
         allp[allp.size() - 1].damp = 1;
         allp[allp.size() - 1].id = 0;
+
+        gmap[allp[i].x/chunk_size][allp[i].y/chunk_size] += 1.0;
         //cout << allp[i].x << endl;
         }
-    }
+    }*/
 
     
     
@@ -111,6 +113,8 @@ int main()
     double dt = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
     int cx;
     int cy;
+    double vxm;
+    double vym;
     while (window.isOpen())
     {   
         start = std::chrono::system_clock::now();
@@ -118,7 +122,18 @@ int main()
         window.clear();
         while (window.pollEvent(event))
         {
-
+            if (event.type == sf::Event::KeyPressed)
+        {
+            if (event.key.code == sf::Keyboard::Space)
+            {
+                cout << 'h';
+                allp.push_back(particles());
+                allp[allp.size() - 1].x = position.x;
+                allp[allp.size() - 1].y = position.y;
+                allp[allp.size() - 1].damp = 1;
+                allp[allp.size() - 1].id = 0;
+            }
+        }
 
             if (event.type == sf::Event::Closed)
             {
@@ -127,30 +142,39 @@ int main()
         }
         
         
+
         for (int i = 0; i < allp.size(); i++)
         {
             shape.setPosition(allp[i].x, allp[i].y);
             window.draw(shape);
-            //allp.
             //allp[i].addgravvelocity(501, 300, -.00005 * dt);
             //allp[i].addgravvelocity(500, 300, -.00005 * dt);
             allp[i].update();
             cx = allp[i].x/chunk_size;
             cy = allp[i].y/chunk_size;
-            gmap[cx][cy] += 1;
+            gmap[cx][cy] += 1.0;
+            //cout << velmap[cx][cy][0] << ';' << velmap[cx][cy][1] << endl;
+            vxm = velmap[cx][cy][0];
+            vym = velmap[cx][cy][1];
+            allp[i].vx += (vxm * dt);
+            allp[i].vy += (vym * dt);
+            //cout << gmap[cx][cy] << endl;
+            //cout << i << '|' << velmap[cx][cy][0] << ';' << velmap[cx][cy][1] << endl;
+
         }
+        
 
         //(vector<vector<double> > gmap, int worldsize[2], int chunk_size, vector<vector<vector<double> > > defalt)
+        
+        //cout << velmap[0][0][1] << cout << ','; cout << velmap[0][0][1] << endl;
         velmap = velocityfeild(gmap, worldsize, chunk_size, dvelmap);
-        //cout << velmap[0][0][0]; cout << ','; cout << velmap[0][0][1] << endl;
-
         window.display();
         vector<vector<vector<int> > > map = chunk();
         //cout << map[1][1][0] << endl;
         //out << map[1][1][0] << endl;
-    
+        //break;
         position = sf::Mouse::getPosition(window);
-    
+        //velmap = dvelmap;
         gmap = dgmap;
         end = std::chrono::system_clock::now();
         dt = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();

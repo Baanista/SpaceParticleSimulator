@@ -16,8 +16,8 @@ class particles
         double y;
 
         //velocities
-        double vx;
-        double vy;
+        double vx = 0;
+        double vy = 0;
 
         //damp is the loss of velocity due to friction
         double damp;

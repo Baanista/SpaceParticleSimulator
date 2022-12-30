@@ -8,6 +8,8 @@
 using namespace std;
 #include <cstdlib>  // for rand and srand
 #include <ctime>    // for time
+#include <printf.h>
+#include <stdio.h>
 
 int random_in_range(int lower_bound, int upper_bound) {
     // Seed the random number generator with the current time
@@ -22,19 +24,32 @@ int random_in_range(int lower_bound, int upper_bound) {
 
 pair<double, double> addgravvelocityfeild(double x, double y, double ox, double oy, double attraction, int chunk_size)
 {
-    
-    double dist = sqrt((x - ox)*(x - ox) + (y - oy)*(y - oy));
-
+    if (attraction == 0)
+    {
+        //cout << '-' << endl;
+        //printf("%s \n", "____________________1");;
+        return make_pair(0, 0);
+        
+    }
+    double ix = x - ox;
+    double iy = y - oy;
+    double dist = sqrt(ix*ix + iy*iy);
+    //cout << dist << endl;
+    if (dist == 0)
+    {
+        //cout << '-' << endl;
+        //printf("%s \n", "____________________2");;
+        return make_pair(0, 0);
+        
+    }
     //cout << dist << endl;
             
     double div = attraction / dist;
+    //cout << div << endl;
 
     double vx = ((x - ox) * div);
     double vy = ((y - oy) * div);
-    cout << vx;
-    cout << ',';
-    cout << vy;
-    cout << endl;
+    //cout << vx << ';' << vy << '|' << '2' << endl;
 
     return make_pair(vx, vy);
 }
@@ -47,16 +62,20 @@ vector<vector<vector<double> > > velocityfeild(vector<vector<double> > gmap, int
     
     for (int x = 0; x < gmap.size(); x++)
     {
-        for (int y = 0; y < gmap.size(); y++)
+        for (int y = 0; y < gmap[0].size(); y++)
             {
                 
                 for (int i = 0; i < gmap.size(); i++)
                 {
-                    for (int a = 0; a < gmap.size(); a++)
+                    for (int a = 0; a < gmap[0].size(); a++)
                     {
-                        pair<double, double> temp = addgravvelocityfeild((x * 2) + half, (y *2) +half, i, a, gmap[i][a]* -.001, chunk_size);
-                        out[x][y][0] += temp.first;
-                        out[x][y][1] += temp.second;
+                        //cout << x << ',' << y << endl;
+                        //cout << gmap[i][a] << endl;
+                        pair<double, double> temp = addgravvelocityfeild(x, y, i, a, gmap[i][a], chunk_size);
+                        out[x][y][0] += temp.first * -.0000001;
+                        out[x][y][1] += temp.second * -.0000001;
+                        //cout << temp.first << ';' << temp.second << '|' << '2' << endl;
+                        //cout << gmap[i][a] << ':' << temp.first << ',' << temp.second << endl;
                     }
                 }
             }
