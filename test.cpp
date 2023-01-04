@@ -1,17 +1,55 @@
 #include <iostream>
 #include <chrono>
-#include <ctime>    
+#include <ctime>   
+#include "preformance.hpp"
+#include <stdio.h>
+#include <iostream>
+#include <tuple>
+#include <vector>
+#include "particle.hpp"
+using namespace std;
+#include <cstdlib>  // for rand and srand
+#include <ctime>    // for time
+#include "debughelp.hpp"
+
+//vector<int> printintvec
 
 int main()
 {
-    auto start = std::chrono::system_clock::now();
-    // Some computation here
-    auto end = std::chrono::system_clock::now();
- 
-    std::chrono::duration<double> elapsed_seconds = end-start;
-    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
- 
-    std::cout << "finished computation at " << std::ctime(&end_time)
-              << "elapsed time: " << elapsed_seconds.count() << "s"
-              << std::endl;
+    vector<vector<vector<int> > > map(3, vector<vector<int> >(3));
+    int i = 0;
+    for (int x = 0; x < map.size(); x++)
+    {
+        for (int y = 0; y < map[0].size(); y++)
+        {
+            map[x][y].push_back(i);
+
+            i ++;
+            map[x][y].push_back(i);
+
+            i ++;
+        }
+    }
+    i = 0;
+    for (int x = 0; x < map.size(); x++)
+    {
+        for (int y = 0; y < map[0].size(); y++)
+        {
+            cout << i << ':';
+            printvecint(map[x][y]);
+            i++;
+        }
+    }
+    map =  change_map(map);
+
+    i = 0;
+    for (int x = 0; x < map.size(); x++)
+    {
+        for (int y = 0; y < map[0].size(); y++)
+        {
+            cout << i << ':';
+            printvecint(map[x][y]);
+            i++;
+        }
+    }
 }

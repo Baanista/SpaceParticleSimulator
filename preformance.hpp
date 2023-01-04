@@ -63,7 +63,7 @@ vector<vector<vector<double> > > velocityfeild(vector<vector<double> > gmap, int
     for (int x = 0; x < gmap.size(); x++)
     {
         for (int y = 0; y < gmap[0].size(); y++)
-            {
+        {
                 
                 for (int i = 0; i < gmap.size(); i++)
                 {
@@ -84,5 +84,95 @@ vector<vector<vector<double> > > velocityfeild(vector<vector<double> > gmap, int
     return out;
 }
 
+vector<vector<vector<int> > > change_map(vector<vector<vector<int> > > map)
+{
+    vector<vector<vector<int> > > out = map;
+    
+    for (int x = 0; x < map.size(); x++)
+    {
+
+        for (int y = 0; y < map[0].size(); y++)
+        {
+            
+            if (x-1 >= 0)
+            {
+
+                for (int i = 0; i < map[x-1][y].size(); i++)
+                {
+                    
+                    out[x][y].push_back(map[x-1][y][i]);
+                }
+            }
+            if (y-1 >= 0)
+            {
+
+                for (int i = 0; i < map[x][y-1].size(); i++)
+                {
+                    out[x][y].push_back(map[x][y-1][i]);
+                }
+            }
+            
+            if (x+1 < map.size())
+            {
+                
+                for (int i = 0; i < map[x+1][y].size(); i++)
+                {
+
+                    out[x][y].push_back(map[x+1][y][i]);
+                    //cout << out[x][y].size() << endl;
+                }
+            }
+
+            if (y+1 < map[0].size())
+            {
+
+                for (int i = 0; i < map[x][y+1].size(); i++)
+                {
+                    out[x][y].push_back(map[x][y+1][i]);
+                }
+            }
+            
+            if (x-1 >= 0 && y-1 >= 0)
+            {
+
+                for (int i = 0; i < map[x-1][y-1].size(); i++)
+                {
+                    out[x][y].push_back(map[x-1][y-1][i]);
+                }
+            }
+            
+            if (x-1 >= 0 && y+1 < map[0].size())
+            {
+
+                for (int i = 0; i < map[x-1][y+1].size(); i++)
+                {
+                    out[x][y].push_back(map[x-1][y+1][i]);
+                }
+            }
+            
+            if (x+1 < map.size() && y+1 < map[0].size())
+            {
+
+                for (int i = 0; i < map[x+1][y+1].size(); i++)
+                {
+                    out[x][y].push_back(map[x+1][y+1][i]);
+                }
+            }
+            
+            if (x+1 < map.size() && y-1 >= 0)
+            {
+
+                for (int i = 0; i < map[x+1][y-1].size(); i++)
+                {
+                    out[x][y].push_back(map[x+1][y-1][i]);
+                }
+            }
+
+            
+        }
+    }
+
+    return(out);
+}
 
 #endif
