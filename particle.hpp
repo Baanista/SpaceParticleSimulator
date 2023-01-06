@@ -83,12 +83,13 @@ class particles
                 //a = i;  
                 //cout << a << endl;
                 p = particlesi->at(a);
-                neeraddvelocity(p.x, p.y, -.00005 * dt, 30);
-                neeraddvelocity(p.x, p.y, .002 * dt, 10);
+                //neeraddvelocity(p.x, p.y, -.0001 * dt, 10);
+                neeraddvelocity(p.x, p.y, .01 * dt, 10);
+                //addgravvelocity(p.x, p.y, -.00001 * dt);
             }
 
             //x += vx;
-            //y += vy;
+            //y += vy;      
             //cout << 'd';
             //cout << x << ',' << y << endl;
         }

@@ -152,6 +152,7 @@ int main()
     bool held = false;
     //char v = 'v';
     vector<particles> *allp_adr = &allp;
+    double unidamp = .95;
     
     while (window.isOpen())
     {   
@@ -178,14 +179,14 @@ int main()
         {
             if (event.key.code == sf::Keyboard::S)
             {
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 5; i++)
                 {
-                    for (int a = 0; a < 10; a++)
+                    for (int a = 0; a < 5; a++)
                     {
                         allp.push_back(particles());
-                        allp[allp.size() - 1].x = i + position.x;
-                        allp[allp.size() - 1].y = a + position.y;
-                        allp[allp.size() - 1].damp = 1;
+                        allp[allp.size() - 1].x = 10 * i + position.x;
+                        allp[allp.size() - 1].y = 10 * a + position.y;
+                        allp[allp.size() - 1].damp = unidamp;
                         allp[allp.size() - 1].id = 0;
 
                         gmap[allp[i].x/chunk_size][allp[i].y/chunk_size] += 1.0;
@@ -201,7 +202,7 @@ int main()
                 allp.push_back(particles());
                 allp[allp.size() - 1].x = position.x;
                 allp[allp.size() - 1].y = position.y;
-                allp[allp.size() - 1].damp = 1;
+                allp[allp.size() - 1].damp = unidamp;
                 allp[allp.size() - 1].id = 0;
         }}
             if (event.type == sf::Event::Closed)
@@ -228,13 +229,14 @@ int main()
             map[cx][cy].push_back(i);
             //cout << i << endl;
             //printvecint(map[cx][cy]);
-            gmap[cx][cy] += 1.0;
+            gmap[cx][cy] += 10.0;
             //cout << velmap[cx][cy][0] << ';' << velmap[cx][cy][1] << endl;
             vxm = velmap[cx][cy][0];
             vym = velmap[cx][cy][1];
             //allp[i].vx += (vxm * dt);
             //allp[i].vy += (vym * dt);
-            allp[i].vy += .0004 * dt;
+            allp[i].vy += .002 * dt;
+            
             //cout << gmap[cx][cy] << endl;
             //cout << i << '|' << velmap[cx][cy][0] << ';' << velmap[cx][cy][1] << endl;
             
@@ -261,7 +263,7 @@ int main()
             allp.push_back(particles());
             allp[allp.size() - 1].x = position.x;
             allp[allp.size() - 1].y = position.y;
-            allp[allp.size() - 1].damp = .9975;
+            allp[allp.size() - 1].damp = unidamp;
             allp[allp.size() - 1].id = 0;
         }
         //(vector<vector<double> > gmap, int worldsize[2], int chunk_size, vector<vector<vector<double> > > defalt)
@@ -279,7 +281,7 @@ int main()
         gmap = dgmap;
         end = std::chrono::system_clock::now();
         dt = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-        //cout << dt << endl;
+        cout << (1 / dt) * 1000 << endl;
 
     }
 
