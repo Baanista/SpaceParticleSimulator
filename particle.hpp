@@ -2,11 +2,14 @@
 #define particle_HPP
 #include <cmath>
 //#include "jsoncpp-master/include/json/json.h"
-extern int worldsize[2];
-extern int chunk_size;
+
 #include <iostream>
 using namespace std;
 #include <vector>
+// extern struct particle_details;
+// extern vector<particle_details> particle_detail;
+extern int worldsize[2];
+extern int chunk_size;
 
 //this is the class for a defalt particle
 class particles
@@ -33,7 +36,17 @@ class particles
             void move(double ox, double oy, int attraction);
 
         }
-        void update(int dt, int check, vector<particles> *particlesi, vector<int> neerby)
+        
+        double roughdistance(double ix, double iy)
+        {
+            double dx = abs(x - ix);
+            double dy = abs(x - ix);
+
+            double dist = .5 * (dx + dy + max(dx, dy));
+            return(dist);
+        }
+        
+        void update(int dt, int check, vector<particles> *particlesi, vector<int> neerby, double damper)
         {
 
             
@@ -41,51 +54,94 @@ class particles
             x += vx;
             y += vy;
 
-            vx *= damp;
-            vy *= damp;
+            vx *= damper;
+            vy *= damper;
 
-            if (x < 0) {
-                x = 1;
-                vx *= -1;
-                //x += vx * 2;
-            }
-            if (x > (chunk_size * worldsize[0]) - 1) {
-                x = chunk_size*worldsize[0] - 1;
-                vx *= -1;
-                //x += vx * 2;
-            }
-            if (y <= 0) {
-                y = 1;
-                vy *= -1;
-                
-            }
-            if (y >= (chunk_size * worldsize[1]) - 1) {
-                y = chunk_size * worldsize[1] -1;
-                vy *= -1;
-                
-                  
-            }
+
             int cx = x / chunk_size;
             int cy = y / chunk_size;
             int a;
             particles p;
-            /*
+            double dist;
+            double dx;
+            double dy;
+            double attractiontemp;
+            double power;
             for (int i = 0; i < neerby.size(); i++)
-            {
-                //a = map[cx][cy][i];
-                a = neerby[i];
-                cout << a << ',';
-            }
-            cout << endl;*/
-            for (int i = 0; i < neerby.size(); i++)
+            
             {
                 a = neerby[i];
                 //a = i;  
                 //cout << a << endl;
                 p = particlesi->at(a);
-                //neeraddvelocity(p.x, p.y, -.0001 * dt, 10);
-                neeraddvelocity(p.x, p.y, .01 * dt, 10);
+                
+
+                
+                
+
+                //dist = roughdistance(p.x, p.y);
+                dist = sqrt( (x - p.x) * (x - p.x) + (y - p.y) * (y - p.y) );
+                //neeraddvelocity(p.x, p.y, -.001 * dt, 60, dist);
+                /*
+                for (int z = 0; z < particle_detailid.connection.size(); z++)
+                {
+                    neeraddvelocity(p.x, p.y, particle_detail[p.id].connections[z].attraction * dt, 10, dist);
+                }*/
+                dx = x - p.x;
+                dy = y - p.y;
+                dist = sqrt(dx*dx + dy*dy);
+
+                //neeraddvelocity(p.x, p.y, .002 * dt, 10, dist);
+                if (dist <= 10)
+                {
+                attractiontemp = (10 - dist) * .5;
+                power = sqrt(vx*vx + vy*vy) * .5;
+                neeraddvelocity(p.x, p.y, power, 10, dist);
+                
+                move(p.x, p.y, dist, 10);
+                
+                
+                // vx *= -1 * p.vx;
+                // vy *= -1 * p.vy;
+                //p.move(x, y, attractiontemp);
+                }
+                // for (int a = 0; i < 4; a++)
+                // {
+                //     if (dist <= 10)
+                //     {
+                //     attractiontemp = (10 - dist) * .5;
+                //     move(p.x, p.y, dist, attractiontemp);
+                //     //p.move(x, y, dist, attractiontemp);
+                //     }
+                // }
+                
                 //addgravvelocity(p.x, p.y, -.00001 * dt);
+                
+            }
+                        if (x < 0) {
+                x = 1;
+                vx *= -1;
+                //x += vx * 2;
+                //vx *= 0;
+            }
+            if (x > (chunk_size * worldsize[0]) - 1) {
+                x = chunk_size*worldsize[0] - 1;
+                vx *= -1;
+                //x += vx * 2;
+                //vx *= 0;
+            }
+            if (y <= 0) {
+                y = 1;
+                vy *= -1;
+               // vy *= 0;
+                
+            }
+            if (y >= (chunk_size * worldsize[1]) - 1) {
+                y = chunk_size * worldsize[1] -1;
+                vy *= -1;
+                //vy *= 0;
+                
+                  
             }
 
             //x += vx;
@@ -124,25 +180,28 @@ class particles
             vy += ((y - oy) / div);
             }
         }
-        void neeraddvelocity(double ox, double oy, double attraction, double distance)
+        void neeraddvelocity(double ox, double oy, double attraction, double distance, double distl)
         {
-            double distl = sqrt((x - ox)*(x - ox) + (y - oy)*(y - oy));
+            
             if (distl <= distance)
             {
                 addvelocity(ox, oy, attraction);
+                //vx += ovx * .001;
+                //vy += ovy * .001;
+                //addvelocity(ox, oy, -(1.5/(distl+.5))-(attraction/(distl-distance-.5)));
+                
             }
         }
 
         //this function moves the particle to a location in one step depending on the attraction value
-        void move(double ox, double oy, double attraction)
+        void move(double ox, double oy, double dist, double attraction)
         {
 
-            double dist = sqrt((x - ox)*(x - ox) + (y - oy)*(y - oy));
-
-            //cout << dist << endl;
-
+            if (!(dist == 0))
+            {
             x += ((x - ox) / ((dist / attraction)));
             y += ((y - oy) / ((dist / attraction)));
+            }
         }
 
 };

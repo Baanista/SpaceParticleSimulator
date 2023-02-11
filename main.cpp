@@ -1,6 +1,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "SFML/Window.hpp"
+#include <SFML/Graphics/Color.hpp>
 #include <iostream>
 #include <ctime>
 #include "particle.hpp"
@@ -19,21 +20,6 @@ int chunk_size = 75;
 vector<particles> allp;
 
 
-
-struct particle_details
-{
-    struct connections
-    {
-        double dist;
-        double attraction;
-        int id;
-    };
-
-    int color[3];
-    double size;
-    double damp;
-    vector<connections> connection;
-};
 
 vector<vector<vector<int> > > chunk()
 {
@@ -85,17 +71,17 @@ vector<vector<vector<double> > > vel_gmap()
     return vec;
 }
 
-//std::vector<std::vector<std::vector<int>>> connections;
+//vector<particle_details> particle_detail;
 int main()
 {
-    /*
-    vector<particle_details> particle_details;
     
-    particle_details[0].size = 5;
-    //particle_details[0].connection.push_back(connections);
-    particle_details[0].connection[0].id = 0;
-    particle_details[0].connection[0].dist = 10;
-    particle_details[0].connection[0].attraction = 0.001;*/
+    // particle_detail.push_back(particle_details);
+    // particle_detail[0].size = 5;
+    // particle_detail[0].connection[0];
+    
+    // particle_detail[0].connection[0].id = 0;
+    // particle_detail[0].connection[0].dist = 10;
+    // particle_detail[0].connection[0].attraction = 0.001;    
     
     
 
@@ -111,9 +97,14 @@ int main()
 
     sf::RenderWindow window(sf::VideoMode(1000, 600), "Space Particles");
     window.setVisible(true);
-    
+
+    sf::CircleShape shape(5);
+    shape.setOutlineThickness(2);
+    shape.setOutlineColor(sf::Color(0, 0, 150));
+    shape.setFillColor(sf::Color::Blue);
 
     sf::Vector2i position = sf::Mouse::getPosition(window);
+    
     
 
     //particles test(10, 10);
@@ -122,25 +113,6 @@ int main()
     
     //vector<vector<vector<int> > > map = chunk();
     vector<particles> allp;  
-    
-    /*for (int i = 0; i < 250; i++)
-    {
-        for (int a = 0; a < 150; a++)
-        {
-        allp.push_back(particles());
-        allp[allp.size() - 1].x = i*4;
-        allp[allp.size() - 1].y = a*4;
-        allp[allp.size() - 1].damp = 1;
-        allp[allp.size() - 1].id = 0;
-
-        gmap[allp[i].x/chunk_size][allp[i].y/chunk_size] += 1.0;
-        //cout << allp[i].x << endl;
-        }
-    }*/
-
-    
-    
-    //cout << len(temp) << endl;
     
     auto start = std::chrono::system_clock::now();
     auto end = std::chrono::system_clock::now();
@@ -152,10 +124,12 @@ int main()
     bool held = false;
     //char v = 'v';
     vector<particles> *allp_adr = &allp;
-    double unidamp = .95;
+    //vector<particle_details> *pd = &particle_detail;
+    double funidamp = 1;
+    double unidamp = .1;
     
     while (window.isOpen())
-    {   
+    {    
         start = std::chrono::system_clock::now();
         sf::Event event;
         window.clear();
@@ -213,11 +187,14 @@ int main()
         
         map = dmap;
         //map = change_map(map);
+
+        unidamp = pow(funidamp, (dt/20));
         for (int i = 0; i < allp.size(); i++)
         {
 
-            sf::CircleShape shape(1);
-            shape.setFillColor(sf::Color::Red);
+            
+            
+            
             shape.setPosition(allp[i].x, allp[i].y);
             window.draw(shape);
             //allp[i].addgravvelocity(501, 300, -.00005 * dt);
@@ -235,7 +212,7 @@ int main()
             vym = velmap[cx][cy][1];
             //allp[i].vx += (vxm * dt);
             //allp[i].vy += (vym * dt);
-            allp[i].vy += .002 * dt;
+            //allp[i].vy += .001 * dt;
             
             //cout << gmap[cx][cy] << endl;
             //cout << i << '|' << velmap[cx][cy][0] << ';' << velmap[cx][cy][1] << endl;
@@ -250,7 +227,7 @@ int main()
             cx = allp[i].x/chunk_size;
             cy = allp[i].y/chunk_size;
             //printvecint(map[cx][cy]); 
-            allp[i].update(dt, i, allp_adr, map[cx][cy]);
+            allp[i].update(dt, i, allp_adr, map[cx][cy], unidamp);
         }
 
         //cout << allp.size() - 1 <<endl;
@@ -281,7 +258,7 @@ int main()
         gmap = dgmap;
         end = std::chrono::system_clock::now();
         dt = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-        cout << (1 / dt) * 1000 << endl;
+        //cout <<  dt << endl;
 
     }
 

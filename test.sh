@@ -1,2 +1,2 @@
-g++ test.cpp -o test
+g++ test2.cpp -o test
 ./test
