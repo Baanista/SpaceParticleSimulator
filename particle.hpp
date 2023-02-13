@@ -91,19 +91,20 @@ class particles
                 dy = y - p.y;
                 dist = sqrt(dx*dx + dy*dy);
 
-                //neeraddvelocity(p.x, p.y, .002 * dt, 10, dist);
+                //neeraddvelocity(p.x, p.y, .004 * dt, 20, dist);
+                //neeraddvelocity(p.x, p.y, .002 * dt, 15, dist);
                 if (dist <= 10)
                 {
                 attractiontemp = (10 - dist) * .5;
                 power = sqrt(vx*vx + vy*vy) * .5;
-                neeraddvelocity(p.x, p.y, power, 10, dist);
+                //neeraddvelocity(p.x, p.y, power, 10, dist);
                 
                 move(p.x, p.y, dist, 10);
-                
+                p.move(x, y, dist, 10);
                 
                 // vx *= -1 * p.vx;
                 // vy *= -1 * p.vy;
-                //p.move(x, y, attractiontemp);
+                
                 }
                 // for (int a = 0; i < 4; a++)
                 // {
@@ -116,8 +117,33 @@ class particles
                 // }
                 
                 //addgravvelocity(p.x, p.y, -.00001 * dt);
-                
+            
             }
+
+            for (int j = 0; j < 4; j++){
+            for (int i = 0; i < neerby.size(); i++)
+                {
+                a = neerby[i];
+                //a = i;  
+                //cout << a << endl;
+                p = particlesi->at(a);
+                if (dist <= 10)
+                {
+                    dist = sqrt(dx*dx + dy*dy);
+                    attractiontemp = (10 - dist) * .005;
+                    power = sqrt(vx*vx + vy*vy);
+                    //cout << vx << ',' << vy << endl;
+                    addvelocity(p.x, p.y, power);
+                    
+                    move(p.x, p.y, dist, attractiontemp);
+                    p.move(x, y, dist, attractiontemp);
+                    
+                    // vx *= -1 * p.vx;
+                    // vy *= -1 * p.vy;
+                    
+                    }
+            }}
+
                         if (x < 0) {
                 x = 1;
                 vx *= -1;
@@ -203,6 +229,10 @@ class particles
             y += ((y - oy) / ((dist / attraction)));
             }
         }
+        #include <cmath>
+
+
+
 
 };
 

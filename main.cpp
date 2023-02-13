@@ -162,6 +162,8 @@ int main()
                         allp[allp.size() - 1].y = 10 * a + position.y;
                         allp[allp.size() - 1].damp = unidamp;
                         allp[allp.size() - 1].id = 0;
+                        allp[allp.size() - 1].vx = 1;
+                        allp[allp.size() - 1].vy = 1;
 
                         gmap[allp[i].x/chunk_size][allp[i].y/chunk_size] += 1.0;
         //cout << allp[i].x << endl;
@@ -195,7 +197,7 @@ int main()
             
             
             
-            shape.setPosition(allp[i].x, allp[i].y);
+            shape.setPosition(allp[i].x +5, allp[i].y+5);
             window.draw(shape);
             //allp[i].addgravvelocity(501, 300, -.00005 * dt);
             //allp[i].addgravvelocity(500, 300, -.00005 * dt);
