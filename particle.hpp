@@ -95,7 +95,7 @@ class particles
                 //neeraddvelocity(p.x, p.y, .002 * dt, 15, dist);
                 if (dist <= 10)
                 {
-                attractiontemp = (10 - dist) * .5;
+                attractiontemp = (5 - dist) * .5;
                 power = sqrt(vx*vx + vy*vy) * .5;
                 //neeraddvelocity(p.x, p.y, power, 10, dist);
                 
