@@ -11,6 +11,29 @@ using namespace std;
 extern int worldsize[2];
 extern int chunk_size;
 
+
+struct connection
+    {
+        int distance;
+        double attraction;
+    };
+struct particle_detail
+{
+    int size;
+    int outline_size;
+
+    int inside_r;
+    int inside_g;
+    int inside_b;
+
+    int outside_r;
+    int outside_g;
+    int outside_b;
+    
+    
+    vector<connection> connections;
+};
+extern vector<particle_detail> particle_details;
 //this is the class for a defalt particle
 class particles
 {
@@ -51,8 +74,8 @@ class particles
 
             
 
-            x += vx;
-            y += vy;
+            x += vx * dt;
+            y += vy * dt;
 
             vx *= damper;
             vy *= damper;
@@ -90,22 +113,26 @@ class particles
                 dx = x - p.x;
                 dy = y - p.y;
                 dist = sqrt(dx*dx + dy*dy);
-
-                //neeraddvelocity(p.x, p.y, .004 * dt, 20, dist);
-                //neeraddvelocity(p.x, p.y, .002 * dt, 15, dist);
-                if (dist <= 10)
-                {
-                attractiontemp = (5 - dist) * .5;
-                power = sqrt(vx*vx + vy*vy) * .5;
-                //neeraddvelocity(p.x, p.y, power, 10, dist);
                 
-                move(p.x, p.y, dist, 10);
-                p.move(x, y, dist, 10);
                 
-                // vx *= -1 * p.vx;
-                // vy *= -1 * p.vy;
+                neeraddvelocitygrav(p.x, p.y, particle_details[id].connections[p.id].attraction, particle_details[id].connections[p.id].distance, dist);
+                //neeraddvelocity(p.x, p.y, .0008 * dt, particle_details[id].size*2, dist);
                 
-                }
+                //neeraddvelocity(p.x, p.y, -.002 * dt, 15, dist);
+                //neeraddvelocity(p.x, p.y, -.002 * dt, 15, dist);
+                // if (dist <= 10)
+                // {
+                // attractiontemp = (5 - dist) * .5;
+                // power = sqrt(vx*vx + vy*vy) * .5;
+                // //neeraddvelocity(p.x, p.y, power, 10, dist);
+                
+                // move(p.x, p.y, dist, 10);
+                // p.move(x, y, dist, 10);
+                
+                // // vx *= -1 * p.vx;
+                // // vy *= -1 * p.vy;
+                
+                // }
                 // for (int a = 0; i < 4; a++)
                 // {
                 //     if (dist <= 10)
@@ -119,27 +146,35 @@ class particles
                 //addgravvelocity(p.x, p.y, -.00001 * dt);
             
             }
-
-            for (int j = 0; j < 4; j++){
+            double bounce_force;
+            double tvx;
+            double tvy;
+            for (int j = 0; j < 16; j++){
             for (int i = 0; i < neerby.size(); i++)
                 {
                 a = neerby[i];
                 //a = i;  
                 //cout << a << endl;
                 p = particlesi->at(a);
-                if (dist <= 10)
+                dx = x - p.x;
+                dy = y - p.y;
+                dist = sqrt(dx*dx + dy*dy);
+                if (dist <= particle_details[id].size + particle_details[p.id].size)
                 {
-                    dist = sqrt(dx*dx + dy*dy);
-                    attractiontemp = (10 - dist) * .005;
-                    power = sqrt(vx*vx + vy*vy);
-                    //cout << vx << ',' << vy << endl;
-                    addvelocity(p.x, p.y, power);
+                    
+                    attractiontemp = (particle_details[id].size + particle_details[p.id].size - dist) * .5;
+                    // power = 1 / sqrt(vx*vx + vy*vy);
+                    // //cout << vx << ',' << vy << endl;
+                    // addvelocity(p.x, p.y, power * .5);
+                    // p.addvelocity(x, y, power * .5);
                     
                     move(p.x, p.y, dist, attractiontemp);
                     p.move(x, y, dist, attractiontemp);
-                    
-                    // vx *= -1 * p.vx;
-                    // vy *= -1 * p.vy;
+
+                    tvx = p.vx;
+                    tvy = p.vy;
+
+                    vx = vx - (2 * particle_details(p.id).size/(particle_details(p.id).size + particle_details(id).size)) * (()/)*(x-p.x)
                     
                     }
             }}
@@ -218,7 +253,18 @@ class particles
                 
             }
         }
-
+        void neeraddvelocitygrav(double ox, double oy, double attraction, double distance, double distl)
+        {
+            
+            if (distl <= distance)
+            {
+                addgravvelocity(ox, oy, attraction);
+                //vx += ovx * .001;
+                //vy += ovy * .001;
+                //addvelocity(ox, oy, -(1.5/(distl+.5))-(attraction/(distl-distance-.5)));
+                
+            }
+        }
         //this function moves the particle to a location in one step depending on the attraction value
         void move(double ox, double oy, double dist, double attraction)
         {

@@ -88,7 +88,8 @@
     "variant": "cpp",
     "vector": "cpp",
     "numeric": "cpp",
-    "random": "cpp"
+    "random": "cpp",
+    "iterator": "cpp"
   },
   "C_Cpp.errorSquiggles": "disabled"
 }

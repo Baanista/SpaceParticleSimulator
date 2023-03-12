@@ -7,6 +7,7 @@
 #include "particle.hpp"
 #include "preformance.hpp"
 #include "debughelp.hpp"
+#include "gameterminal.hpp"
 #include <stdio.h>
 #include<tuple>
 #include <vector>
@@ -15,8 +16,8 @@
 using namespace std;
 
 
-int worldsize[2] = {13, 8};
-int chunk_size = 75;
+int worldsize[2] = {10, 6};
+int chunk_size = 100;
 vector<particles> allp;
 
 
@@ -71,12 +72,52 @@ vector<vector<vector<double> > > vel_gmap()
     return vec;
 }
 
-//vector<particle_details> particle_detail;
+vector<particle_detail> particle_details;
 int main()
 {
+    particle_detail tempdetails;
+    tempdetails.size =5;
+    tempdetails.outline_size =0;
+    tempdetails.inside_r = 255;
+    tempdetails.inside_b = 255;
+    tempdetails.inside_g = 255;
+    tempdetails.outside_r = 255;
+    tempdetails.outside_b = 0;
+    tempdetails.outside_g = 0;
+    connection tempconection;
+    tempconection.attraction = .01;
+    tempconection.distance = 20;
+    tempdetails.connections.push_back(tempconection);
+    tempconection.attraction = -.002;
+    tempconection.distance = 20;
+    tempdetails.connections.push_back(tempconection);
     
-    // particle_detail.push_back(particle_details);
-    // particle_detail[0].size = 5;
+
+    particle_details.push_back(tempdetails);
+    
+    tempdetails.size =5;
+    tempdetails.outline_size = 2;
+    tempdetails.inside_r = 255;
+    tempdetails.inside_b = 0;
+    tempdetails.inside_g = 255;
+    tempdetails.outside_r = 0;
+    tempdetails.outside_b = 255;
+    tempdetails.outside_g = 0;
+    
+    tempconection.attraction = .1;
+    tempconection.distance = 30;
+    tempdetails.connections.push_back(tempconection);
+    
+    
+    tempconection.attraction = -.002;
+    tempconection.distance = 20;
+    tempdetails.connections.push_back(tempconection);
+    
+    particle_details.push_back(tempdetails);
+    // particle_details[0].size = 5;
+    // particle_details[0].r = 255;
+    // particle_details[0].b = 255;
+    // particle_details[0].g = 255;
     // particle_detail[0].connection[0];
     
     // particle_detail[0].connection[0].id = 0;
@@ -98,10 +139,9 @@ int main()
     sf::RenderWindow window(sf::VideoMode(1000, 600), "Space Particles");
     window.setVisible(true);
 
-    sf::CircleShape shape(5);
-    shape.setOutlineThickness(2);
-    shape.setOutlineColor(sf::Color(0, 0, 150));
-    shape.setFillColor(sf::Color::Blue);
+    
+    
+    
 
     sf::Vector2i position = sf::Mouse::getPosition(window);
     
@@ -125,8 +165,9 @@ int main()
     //char v = 'v';
     vector<particles> *allp_adr = &allp;
     //vector<particle_details> *pd = &particle_detail;
-    double funidamp = 1;
+    double funidamp = .99;
     double unidamp = .1;
+    int selected_id = 0;
     
     while (window.isOpen())
     {    
@@ -153,17 +194,16 @@ int main()
         {
             if (event.key.code == sf::Keyboard::S)
             {
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < 10; i++)
                 {
-                    for (int a = 0; a < 5; a++)
+                    for (int a = 0; a < 10; a++)
                     {
                         allp.push_back(particles());
-                        allp[allp.size() - 1].x = 10 * i + position.x;
-                        allp[allp.size() - 1].y = 10 * a + position.y;
+                        allp[allp.size() - 1].x = 4 * i + position.x;
+                        allp[allp.size() - 1].y = 4 * a + position.y;
                         allp[allp.size() - 1].damp = unidamp;
-                        allp[allp.size() - 1].id = 0;
-                        allp[allp.size() - 1].vx = 1;
-                        allp[allp.size() - 1].vy = 1;
+                        allp[allp.size() - 1].id = selected_id;
+                        //allp[allp.size() - 1].vx = .5;
 
                         gmap[allp[i].x/chunk_size][allp[i].y/chunk_size] += 1.0;
         //cout << allp[i].x << endl;
@@ -180,7 +220,16 @@ int main()
                 allp[allp.size() - 1].y = position.y;
                 allp[allp.size() - 1].damp = unidamp;
                 allp[allp.size() - 1].id = 0;
+                allp[allp.size() - 1].vx = .5;
         }}
+        if (event.type == sf::Event::KeyPressed)
+        {
+            if (event.key.code == sf::Keyboard::Tab)
+            {
+                cout << "hello" << endl;
+                gameterminal();
+            }
+        }
             if (event.type == sf::Event::Closed)
             {
                 window.close();
@@ -188,17 +237,22 @@ int main()
         }
         
         map = dmap;
-        //map = change_map(map);
-
+        map = change_map(map);
+        velmap = dvelmap;
         unidamp = pow(funidamp, (dt/20));
         for (int i = 0; i < allp.size(); i++)
         {
 
-            
-            
-            
-            shape.setPosition(allp[i].x +5, allp[i].y+5);
+            int id = allp[i].id;
+            sf::CircleShape shape(particle_details[id].size);
+            shape.setOutlineThickness(particle_details[id].outline_size);
+            shape.setFillColor(sf::Color(particle_details[id].inside_r, particle_details[id].inside_g, particle_details[id].inside_b));
+            shape.setOutlineColor(sf::Color(particle_details[id].outside_r, particle_details[id].outside_g, particle_details[id].outside_b));
+            shape.setPosition(allp[i].x, allp[i].y);
             window.draw(shape);
+
+            //window.draw(shape);
+               
             //allp[i].addgravvelocity(501, 300, -.00005 * dt);
             //allp[i].addgravvelocity(500, 300, -.00005 * dt);
             
@@ -208,14 +262,16 @@ int main()
             map[cx][cy].push_back(i);
             //cout << i << endl;
             //printvecint(map[cx][cy]);
-            gmap[cx][cy] += 10.0;
+            gmap[cx][cy] += 100.0;
             //cout << velmap[cx][cy][0] << ';' << velmap[cx][cy][1] << endl;
             vxm = velmap[cx][cy][0];
             vym = velmap[cx][cy][1];
-            //allp[i].vx += (vxm * dt);
-            //allp[i].vy += (vym * dt);
-            //allp[i].vy += .001 * dt;
+            //cout << vxm << vym <<endl;
+            allp[i].vx += (vxm * dt);
             
+            allp[i].vy += (vym * dt);
+            allp[i].vy += .002 * dt;
+            //cout << gmap[cx][cy] << endl;
             //cout << gmap[cx][cy] << endl;
             //cout << i << '|' << velmap[cx][cy][0] << ';' << velmap[cx][cy][1] << endl;
             
@@ -243,7 +299,8 @@ int main()
             allp[allp.size() - 1].x = position.x;
             allp[allp.size() - 1].y = position.y;
             allp[allp.size() - 1].damp = unidamp;
-            allp[allp.size() - 1].id = 0;
+            allp[allp.size() - 1].id = selected_id;
+            
         }
         //(vector<vector<double> > gmap, int worldsize[2], int chunk_size, vector<vector<vector<double> > > defalt)
         
@@ -255,13 +312,14 @@ int main()
         //out << map[1][1][0] << endl;
         //break;
         position = sf::Mouse::getPosition(window);
-        //velmap = dvelmap;
+        
         
         gmap = dgmap;
         end = std::chrono::system_clock::now();
         dt = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-        //cout <<  dt << endl;
-
+        dt =  (dt);
+        cout <<  dt << endl;
+        //cout <<  allp.size() << endl;
     }
 
     return 0;
