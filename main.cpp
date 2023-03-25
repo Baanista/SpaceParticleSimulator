@@ -13,6 +13,7 @@
 #include <vector>
 #include <random>
 #include <chrono>
+#include <thread>
 using namespace std;
 
 
@@ -85,8 +86,8 @@ int main()
     tempdetails.outside_b = 0;
     tempdetails.outside_g = 0;
     connection tempconection;
-    tempconection.attraction = .01;
-    tempconection.distance = 20;
+    tempconection.attraction = -.01;
+    tempconection.distance = 0;
     tempdetails.connections.push_back(tempconection);
     tempconection.attraction = -.002;
     tempconection.distance = 20;
@@ -105,7 +106,7 @@ int main()
     tempdetails.outside_g = 0;
     
     tempconection.attraction = .1;
-    tempconection.distance = 30;
+    tempconection.distance = 0;
     tempdetails.connections.push_back(tempconection);
     
     
@@ -165,7 +166,7 @@ int main()
     //char v = 'v';
     vector<particles> *allp_adr = &allp;
     //vector<particle_details> *pd = &particle_detail;
-    double funidamp = .99;
+    double funidamp = 1;
     double unidamp = .1;
     int selected_id = 0;
     
@@ -199,8 +200,8 @@ int main()
                     for (int a = 0; a < 10; a++)
                     {
                         allp.push_back(particles());
-                        allp[allp.size() - 1].x = 4 * i + position.x;
-                        allp[allp.size() - 1].y = 4 * a + position.y;
+                        allp[allp.size() - 1].x = 10 * i + position.x;
+                        allp[allp.size() - 1].y = 10 * a + position.y;
                         allp[allp.size() - 1].damp = unidamp;
                         allp[allp.size() - 1].id = selected_id;
                         //allp[allp.size() - 1].vx = .5;
@@ -220,7 +221,7 @@ int main()
                 allp[allp.size() - 1].y = position.y;
                 allp[allp.size() - 1].damp = unidamp;
                 allp[allp.size() - 1].id = 0;
-                allp[allp.size() - 1].vx = .5;
+                allp[allp.size() - 1].vx = 1;
         }}
         if (event.type == sf::Event::KeyPressed)
         {
@@ -267,10 +268,10 @@ int main()
             vxm = velmap[cx][cy][0];
             vym = velmap[cx][cy][1];
             //cout << vxm << vym <<endl;
-            allp[i].vx += (vxm * dt);
+            //allp[i].vx += (vxm * dt);
             
-            allp[i].vy += (vym * dt);
-            allp[i].vy += .002 * dt;
+            //allp[i].vy += (vym * dt);
+            allp[i].vy += .008;
             //cout << gmap[cx][cy] << endl;
             //cout << gmap[cx][cy] << endl;
             //cout << i << '|' << velmap[cx][cy][0] << ';' << velmap[cx][cy][1] << endl;
@@ -317,10 +318,13 @@ int main()
         gmap = dgmap;
         end = std::chrono::system_clock::now();
         dt = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-        dt =  (dt);
-        cout <<  dt << endl;
+        
+        printf("fps: ");
+        cout << 1000/dt << endl;
         //cout <<  allp.size() << endl;
+        dt = 1;
+        //dt = 1/dt * 20;
     }
 
     return 0;
-}
+}   
