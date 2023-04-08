@@ -33,7 +33,7 @@ struct particle_detail
     int outside_b;
     
     
-    vector<vector<connection> > connections;
+    vector<connection>  connections;
 };
 extern vector<particle_detail> particle_details;
 //this is the class for a defalt particle
@@ -115,12 +115,11 @@ class particles
                 dx = x - p.x;
                 dy = y - p.y;
                 dist = sqrt(dx*dx + dy*dy);
-                cout << particle_details[id].connections[p.id].size();
-                for (int a = 0; i < particle_details[id].connections[p.id].size(); a++)
-                {
+                //cout << particle_details[id].connections[p.id].size();
+
                     //cout << particle_details[id].connections[p.id][0].attraction;
-                    neeraddvelocity(p.x, p.y, particle_details[id].connections[p.id][a].attraction, particle_details[id].connections[p.id][a].distance, dist);
-                }
+                neeraddvelocity(p.x, p.y, particle_details[id].connections[p.id].attraction, particle_details[id].connections[p.id].distance, dist);
+
 
             
             }

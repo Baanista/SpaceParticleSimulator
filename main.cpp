@@ -96,11 +96,9 @@ particle_detail add_particle_detail(int size, int outline_size, double damp, int
     zero_connection.attraction = 0;
     zero_connection.distance = 0;
     
-    vector<connection> array_connection;
-    array_connection.push_back(zero_connection);
     for (int i = 0; i < max_particle_types; i++)
     {
-        output_details.connections.push_back(array_connection);
+        output_details.connections.push_back(zero_connection);
     }
 
     return(output_details);
@@ -170,13 +168,13 @@ void gameterminal()
 int main()
 {
     particle_detail tempdetails = add_particle_detail(5, 0,  1, 255, 0, 255, 255, 0, 0);
-    tempdetails.connections[0][0].attraction = -.04;
-    tempdetails.connections[0][0].distance = 25;
+    tempdetails.connections[0].attraction = -.04;
+    tempdetails.connections[0].distance = 25;
     particle_details.push_back(tempdetails);
     
     tempdetails = add_particle_detail(1, 0, 1, 255, 255, 255, 255, 255, 255);
-    tempdetails.connections[1][0].attraction = .01;
-    tempdetails.connections[1][0].distance = 40;
+    tempdetails.connections[1].attraction = .01;
+    tempdetails.connections[1].distance = 40;
     particle_details.push_back(tempdetails);
     // particle_details[0].size = 5;
     // particle_details[0].r = 255;
