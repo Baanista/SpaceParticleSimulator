@@ -7,7 +7,7 @@
 #include "particle.hpp"
 #include "preformance.hpp"
 #include "debughelp.hpp"
-#include "gameterminal.hpp"
+
 #include <stdio.h>
 #include<tuple>
 #include <vector>
@@ -16,11 +16,12 @@
 #include <thread>
 using namespace std;
 
-
+int max_particle_types = 100;
+int selected_id = 0;
 int worldsize[2] = {10, 6};
 int chunk_size = 100;
 vector<particles> allp;
-
+vector<particle_detail> particle_details;
 
 
 vector<vector<vector<int> > > chunk()
@@ -73,47 +74,109 @@ vector<vector<vector<double> > > vel_gmap()
     return vec;
 }
 
-vector<particle_detail> particle_details;
+// void threadedupdate(int anount_of_thread)
+// {
+
+// }
+
+particle_detail add_particle_detail(int size, int outline_size, double damp, int inside_r, int inside_b, int inside_g, int outside_r, int outside_b, int outside_g)
+{
+    particle_detail output_details;
+    output_details.size =size;
+    output_details.outline_size =outline_size;
+    output_details.damp = damp;
+    output_details.inside_r = inside_r;
+    output_details.inside_b = inside_b;
+    output_details.inside_g = inside_g;
+    output_details.outside_r = outside_r;
+    output_details.outside_b = outside_b;
+    output_details.outside_g = outside_g;
+
+    connection zero_connection;
+    zero_connection.attraction = 0;
+    zero_connection.distance = 0;
+    
+    vector<connection> array_connection;
+    array_connection.push_back(zero_connection);
+    for (int i = 0; i < max_particle_types; i++)
+    {
+        output_details.connections.push_back(array_connection);
+    }
+
+    return(output_details);
+}
+
+void gameterminal()
+{
+    string command;
+
+    while (command != "end")
+    {
+        cout << ">";
+        cin >> command;
+        if (command == "id")
+        {
+            cout << "id: ";
+            cin >> selected_id;
+        }
+        else if (command == "num_types")
+        {
+            cout << particle_details.size() << endl;
+        }
+        else if (command == "edit")
+        {
+            string edit_commands;
+            string edit_id;
+            while (edit_commands != "end")
+            {
+                cin >> edit_commands;
+            }
+        }
+        else if (command == "add")
+        {   
+            int size;
+            int outline_size;
+            double damp;
+            int inside_r;
+            int inside_b;
+            int inside_g;
+            int outside_r;
+            int outside_b;
+            int outside_g;
+            cout << "size: ";
+            cin >> size;
+            cout << "outline_size: ";
+            cin >> outline_size;
+            cout << "damp: ";
+            cin >> damp;
+            cout << "inside_r: ";
+            cin >> inside_r;
+            cout << "inside_b: ";
+            cin >> inside_b;
+            cout << "inside_g: ";
+            cin >> inside_g;
+            cout << "outside_r: ";
+            cin >> outside_r;
+            cout << "outside_b: ";
+            cin >> outside_b;
+            cout << "outside_g: ";
+            cin >> outside_g;
+            particle_detail tempdetails = add_particle_detail(size, outline_size, damp, inside_r, inside_b, inside_g,outside_r, outside_b, outside_g);
+        }
+    }
+    
+}
+
 int main()
 {
-    particle_detail tempdetails;
-    tempdetails.size =5;
-    tempdetails.outline_size =0;
-    tempdetails.inside_r = 255;
-    tempdetails.inside_b = 255;
-    tempdetails.inside_g = 255;
-    tempdetails.outside_r = 255;
-    tempdetails.outside_b = 0;
-    tempdetails.outside_g = 0;
-    connection tempconection;
-    tempconection.attraction = -.01;
-    tempconection.distance = 0;
-    tempdetails.connections.push_back(tempconection);
-    tempconection.attraction = -.002;
-    tempconection.distance = 20;
-    tempdetails.connections.push_back(tempconection);
-    
-
+    particle_detail tempdetails = add_particle_detail(5, 0,  1, 255, 0, 255, 255, 0, 0);
+    tempdetails.connections[0][0].attraction = -.04;
+    tempdetails.connections[0][0].distance = 25;
     particle_details.push_back(tempdetails);
     
-    tempdetails.size =5;
-    tempdetails.outline_size = 2;
-    tempdetails.inside_r = 255;
-    tempdetails.inside_b = 0;
-    tempdetails.inside_g = 255;
-    tempdetails.outside_r = 0;
-    tempdetails.outside_b = 255;
-    tempdetails.outside_g = 0;
-    
-    tempconection.attraction = .1;
-    tempconection.distance = 0;
-    tempdetails.connections.push_back(tempconection);
-    
-    
-    tempconection.attraction = -.002;
-    tempconection.distance = 20;
-    tempdetails.connections.push_back(tempconection);
-    
+    tempdetails = add_particle_detail(1, 0, 1, 255, 255, 255, 255, 255, 255);
+    tempdetails.connections[1][0].attraction = .01;
+    tempdetails.connections[1][0].distance = 40;
     particle_details.push_back(tempdetails);
     // particle_details[0].size = 5;
     // particle_details[0].r = 255;
@@ -166,9 +229,9 @@ int main()
     //char v = 'v';
     vector<particles> *allp_adr = &allp;
     //vector<particle_details> *pd = &particle_detail;
-    double funidamp = 1;
-    double unidamp = .1;
-    int selected_id = 0;
+    double funidamp = .9999;
+    double unidamp = 1;
+    
     
     while (window.isOpen())
     {    
@@ -200,9 +263,9 @@ int main()
                     for (int a = 0; a < 10; a++)
                     {
                         allp.push_back(particles());
-                        allp[allp.size() - 1].x = 10 * i + position.x;
-                        allp[allp.size() - 1].y = 10 * a + position.y;
-                        allp[allp.size() - 1].damp = unidamp;
+                        allp[allp.size() - 1].x = (particle_details[selected_id].size * 2) * i + position.x;
+                        allp[allp.size() - 1].y = (particle_details[selected_id].size * 2) * a + position.y;
+                        //allp[allp.size() - 1].damp = unidamp;
                         allp[allp.size() - 1].id = selected_id;
                         //allp[allp.size() - 1].vx = .5;
 
@@ -219,8 +282,8 @@ int main()
                 allp.push_back(particles());
                 allp[allp.size() - 1].x = position.x;
                 allp[allp.size() - 1].y = position.y;
-                allp[allp.size() - 1].damp = unidamp;
-                allp[allp.size() - 1].id = 0;
+                //allp[allp.size() - 1].damp = unidamp;
+                allp[allp.size() - 1].id = selected_id;
                 allp[allp.size() - 1].vx = 1;
         }}
         if (event.type == sf::Event::KeyPressed)
@@ -231,16 +294,19 @@ int main()
                 gameterminal();
             }
         }
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed || event.key.code == sf::Keyboard::Escape)
             {
-                window.close();
+                allp.push_back(particles());
+                allp[allp.size() - 1].x = -1;
+                allp[allp.size() - 1].y = -1;
+
             }
         }
         
         map = dmap;
         map = change_map(map);
         velmap = dvelmap;
-        unidamp = pow(funidamp, (dt/20));
+        //unidamp = pow(funidamp, (dt/20));
         for (int i = 0; i < allp.size(); i++)
         {
 
@@ -271,7 +337,7 @@ int main()
             //allp[i].vx += (vxm * dt);
             
             //allp[i].vy += (vym * dt);
-            allp[i].vy += .008;
+            //allp[i].vy += .008;
             //cout << gmap[cx][cy] << endl;
             //cout << gmap[cx][cy] << endl;
             //cout << i << '|' << velmap[cx][cy][0] << ';' << velmap[cx][cy][1] << endl;
@@ -287,6 +353,10 @@ int main()
             cy = allp[i].y/chunk_size;
             //printvecint(map[cx][cy]); 
             allp[i].update(dt, i, allp_adr, map[cx][cy], unidamp);
+
+
+
+            //th.join();
         }
 
         //cout << allp.size() - 1 <<endl;
@@ -299,7 +369,7 @@ int main()
             allp.push_back(particles());
             allp[allp.size() - 1].x = position.x;
             allp[allp.size() - 1].y = position.y;
-            allp[allp.size() - 1].damp = unidamp;
+            //allp[allp.size() - 1].damp = unidamp;
             allp[allp.size() - 1].id = selected_id;
             
         }
@@ -320,11 +390,13 @@ int main()
         dt = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
         
         printf("fps: ");
-        cout << 1000/dt << endl;
+        cout << dt << endl;
+        printf("id: ");
+        cout << selected_id << endl;
         //cout <<  allp.size() << endl;
         dt = 1;
-        //dt = 1/dt * 20;
+        //dt = dt * .1;
     }
-
+    cin.get();
     return 0;
-}   
+}    

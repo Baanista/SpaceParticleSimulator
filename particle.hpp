@@ -22,6 +22,7 @@ struct particle_detail
 {
     int size;
     int outline_size;
+    int damp;
 
     int inside_r;
     int inside_g;
@@ -32,7 +33,7 @@ struct particle_detail
     int outside_b;
     
     
-    vector<connection> connections;
+    vector<vector<connection> > connections;
 };
 extern vector<particle_detail> particle_details;
 //this is the class for a defalt particle
@@ -48,7 +49,7 @@ class particles
         double vy = 0;
 
         //damp is the loss of velocity due to friction
-        double damp;
+       // double damp;
 
         //connections is equal to connections from main [id]
         //connections{id, distance, atraction}
@@ -77,10 +78,13 @@ class particles
 
             x += vx * dt;
             y += vy * dt;
+            
 
-            vx *= damper;
-            vy *= damper;
-
+            // vx *= damper;
+            // vy *= damper;
+            //cout << particle_details[id].size << endl;
+            vx *= particle_details[id].damp;
+            vy *= particle_details[id].damp;
 
             int cx = x / chunk_size;
             int cy = y / chunk_size;
@@ -91,6 +95,8 @@ class particles
             double dy;
             double attractiontemp;
             double power;
+            // printf("speed:");
+            // cout << sqrt(vx*vx + vy*vy) << endl;
             for (int i = 0; i < neerby.size(); i++)
             
             {
@@ -105,46 +111,17 @@ class particles
 
                 //dist = roughdistance(p.x, p.y);
                 dist = sqrt( (x - p.x) * (x - p.x) + (y - p.y) * (y - p.y) );
-                //neeraddvelocity(p.x, p.y, -.001 * dt, 60, dist);
-                /*
-                for (int z = 0; z < particle_detailid.connection.size(); z++)
-                {
-                    neeraddvelocity(p.x, p.y, particle_detail[p.id].connections[z].attraction * dt, 10, dist);
-                }*/
+
                 dx = x - p.x;
                 dy = y - p.y;
                 dist = sqrt(dx*dx + dy*dy);
-                
-                
-                neeraddvelocity(p.x, p.y, particle_details[id].connections[p.id].attraction, particle_details[id].connections[p.id].distance, dist);
-                //neeraddvelocity(p.x, p.y, .0008 * dt, particle_details[id].size*2, dist);
-                
-                //neeraddvelocity(p.x, p.y, -.002 * dt, 15, dist);
-                //neeraddvelocity(p.x, p.y, -.002 * dt, 15, dist);
-                // if (dist <= 10)
-                // {
-                // attractiontemp = (5 - dist) * .5;
-                // power = sqrt(vx*vx + vy*vy) * .5;
-                // //neeraddvelocity(p.x, p.y, power, 10, dist);
-                
-                // move(p.x, p.y, dist, 10);
-                // p.move(x, y, dist, 10);
-                
-                // // vx *= -1 * p.vx;
-                // // vy *= -1 * p.vy;
-                
-                // }
-                // for (int a = 0; i < 4; a++)
-                // {
-                //     if (dist <= 10)
-                //     {
-                //     attractiontemp = (10 - dist) * .5;
-                //     move(p.x, p.y, dist, attractiontemp);
-                //     //p.move(x, y, dist, attractiontemp);
-                //     }
-                // }
-                
-                //addgravvelocity(p.x, p.y, -.00001 * dt);
+                cout << particle_details[id].connections[p.id].size();
+                for (int a = 0; i < particle_details[id].connections[p.id].size(); a++)
+                {
+                    //cout << particle_details[id].connections[p.id][0].attraction;
+                    neeraddvelocity(p.x, p.y, particle_details[id].connections[p.id][a].attraction, particle_details[id].connections[p.id][a].distance, dist);
+                }
+
             
             }
             double bounce_force;
@@ -171,10 +148,11 @@ class particles
                     // p.addvelocity(x, y, power * .5);
                     attractiontemp = ((particle_details[id].size + particle_details[p.id].size) - dist) * .5;
                     
-
-
+                    
+                    tvx = vx;
+                    tvy = vy;
                     circle_collision_result(dist, p.x, p.y, p.vx, p.vy, particle_details[p.id].size);
-                    particlesi->at(a).circle_collision_result(dist, x, y, vx, vy, particle_details[id].size);
+                    particlesi->at(a).circle_collision_result(dist, x, y, tvx, tvy, particle_details[id].size);
 
                     move(p.x, p.y, dist, attractiontemp);
                     particlesi->at(a).move(x, y, dist, attractiontemp);
@@ -240,43 +218,38 @@ class particles
             }
             
         }
+
         void circle_collision_result(double distance, double ox, double oy, double other_velocityx, double other_velocityy, double other_mass)
-            {
-                // Get this particle's mass and velocity
-                double mass = particle_details[id].size;
+        {
+            double mass = particle_details[id].size;
 
-                // Calculate the unit normal vector and unit tangent vector
-                double nx = (ox - x) / distance;
-                double ny = (oy - y) / distance;
-                double tx = -ny;
-                double ty = nx;
+            // calculate the unit normal and tangential vectors
+            double unx = (ox - x) / distance;
+            double uny = (oy - y) / distance;
+            double utx = -uny;
+            double uty = unx;
 
-                // Calculate the dot product of the velocity and the unit normal and tangent vectors
-                double v1n = vx * nx + vy * ny;
-                double v1t = vx * tx + vy * ty;
-                double v2n = other_velocityx * nx + other_velocityy * ny;
-                double v2t = other_velocityx * tx + other_velocityy * ty;
+            // calculate the scalar normal and tangential velocities
+            double v1n = vx * unx + vy * uny;
+            double v1t = vx * utx + vy * uty;
+            double v2n = other_velocityx * unx + other_velocityy * uny;
+            double v2t = other_velocityx * utx + other_velocityy * uty;
 
-                // Calculate the new normal velocities after the collision
-                double v1n_new = (v1n * (mass - other_mass) + 2 * other_mass * v2n) / (mass + other_mass);
+            // calculate the new scalar normal velocities
+            double v1n_new = (v1n * (mass - other_mass) + 2 * other_mass * v2n) / (mass + other_mass);
+            double v2n_new = (v2n * (other_mass - mass) + 2 * mass * v1n) / (mass + other_mass);
 
-                // Convert the scalar normal and tangent velocities back to vector form
-                double v1n_newx = v1n_new * nx;
-                double v1n_newy = v1n_new * ny;
-                double v1t_newx = v1t * tx;
-                double v1t_newy = v1t * ty;
+            // calculate the new vector velocities
+            double v1x_new = v1n_new * unx + v1t * utx;
+            double v1y_new = v1n_new * uny + v1t * uty;
+            double v2x_new = v2n_new * unx + v2t * utx;
+            double v2y_new = v2n_new * uny + v2t * uty;
 
+            // assign the new velocities to the global variables
+            vx = v1x_new;
+            vy = v1y_new;
+        }
 
-
-                // Calculate the new velocities after the collision
-                double v1x_new = v1n_newx + v1t_newx;
-                double v1y_new = v1n_newy + v1t_newy;
-
-
-                // Set the new velocities for both particles
-                vx = v1x_new;
-                vy = v1y_new;
-            }
 
         //changes velocity
         void addvelocity(double ox, double oy, double attraction)
