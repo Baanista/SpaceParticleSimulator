@@ -123,10 +123,70 @@ void gameterminal()
         }
         else if (command == "edit")
         {
+            cout << "e>";
             string edit_commands;
-            string edit_id;
+            int edit_id;
+            int connection_id;
             while (edit_commands != "end")
             {
+            if (command == "id")
+            {
+                cin >> edit_id;
+            }
+            if (command == "size")
+            {
+                cin >> particle_details[edit_id].size;
+            }
+            if (command == "outline_size")
+            {
+                cin >> particle_details[edit_id].outline_size;
+            }
+            if (command == "outline_size")
+            {
+                cin >> particle_details[edit_id].outline_size;
+            }
+            if (command == "damp")
+            {
+                cin >> particle_details[edit_id].damp;
+            }
+            if (command == "inside_r")
+            {
+                cin >> particle_details[edit_id].inside_r;
+            }
+                
+            
+            if (command == "inside_b")
+            {
+                cin >> particle_details[edit_id].inside_b;
+            };
+            if (command == "inside_g")
+            {
+                cin >> particle_details[edit_id].inside_g;
+            }
+            if (command == "outside_r")
+            {
+                cin >> particle_details[edit_id].outside_r;
+            }
+            if (command == "outside_b")
+            {
+                cin >> particle_details[edit_id].outside_b;
+            }
+            if (command == "outside_g")
+            {
+                cin >> particle_details[edit_id].outside_g;
+            }
+            if (command == "connections")
+            {
+                cout << "id connection you are editing:";
+                cin >> connection_id;
+                cout << "Distance:";
+                cin >> particle_details[edit_id].connections[connection_id].distance;
+                cout << "Attraction:";
+                cin >> particle_details[edit_id].connections[connection_id].attraction;
+
+                
+            }
+            
                 cin >> edit_commands;
             }
         }
@@ -162,17 +222,17 @@ void gameterminal()
             particle_detail tempdetails = add_particle_detail(size, outline_size, damp, inside_r, inside_b, inside_g,outside_r, outside_b, outside_g);
         }
     }
-    
-}
+}  
+
 
 int main()
 {
-    particle_detail tempdetails = add_particle_detail(5, 0,  1, 255, 0, 255, 255, 0, 0);
+    particle_detail tempdetails = add_particle_detail(5, 0, .995, 255, 255, 255, 255, 0, 0);
     tempdetails.connections[0].attraction = -.04;
     tempdetails.connections[0].distance = 25;
     particle_details.push_back(tempdetails);
     
-    tempdetails = add_particle_detail(1, 0, 1, 255, 255, 255, 255, 255, 255);
+    tempdetails = add_particle_detail(2, 0, 1, 255, 255, 255, 255, 255, 255);
     tempdetails.connections[1].attraction = .01;
     tempdetails.connections[1].distance = 40;
     particle_details.push_back(tempdetails);
@@ -280,9 +340,8 @@ int main()
                 allp.push_back(particles());
                 allp[allp.size() - 1].x = position.x;
                 allp[allp.size() - 1].y = position.y;
-                //allp[allp.size() - 1].damp = unidamp;
                 allp[allp.size() - 1].id = selected_id;
-                allp[allp.size() - 1].vx = 1;
+                allp[allp.size() - 1].vx = 5;
         }}
         if (event.type == sf::Event::KeyPressed)
         {

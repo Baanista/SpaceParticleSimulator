@@ -22,7 +22,7 @@ struct particle_detail
 {
     int size;
     int outline_size;
-    int damp;
+    double damp;
 
     int inside_r;
     int inside_g;
@@ -82,7 +82,7 @@ class particles
 
             // vx *= damper;
             // vy *= damper;
-            //cout << particle_details[id].size << endl;
+            //cout << particle_details[id].damp << endl;
             vx *= particle_details[id].damp;
             vy *= particle_details[id].damp;
 
