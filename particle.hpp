@@ -157,8 +157,20 @@ class particles
                     particlesi->at(a).move(x, y, dist, attractiontemp);
 
                     particlesi->at(a).check_border();
-
-
+                    // tvx = vx;
+                    // tvy = vy;
+                    // //cout << tvy / ((tvy + p.vy) *2) << endl;
+                    // if (tvx + p.vx != 0)
+                    // {
+                    // vx *= tvx / ((tvx + p.vx) *2);
+                    // p.vx *= p.vx / ((tvx + p.vx) *2);
+                    // }
+                    // if (tvy + p.vy != 0)
+                    // {
+                        
+                    // vy *= tvy / ((tvy + p.vy) *2);
+                    // p.vy *= p.vy / ((tvy + p.vy) *2);
+                    // }
                 }
 
 

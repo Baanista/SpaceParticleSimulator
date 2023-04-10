@@ -123,59 +123,62 @@ void gameterminal()
         }
         else if (command == "edit")
         {
-            cout << "e>";
+            
             string edit_commands;
-            int edit_id;
+            int edit_id = selected_id;
             int connection_id;
             while (edit_commands != "end")
             {
-            if (command == "id")
+            cout << "e>";
+            if (edit_commands == "id")
             {
                 cin >> edit_id;
             }
-            if (command == "size")
+            if (edit_commands == "size")
             {
+                cout << particle_details[edit_id].size;
                 cin >> particle_details[edit_id].size;
+                cout << particle_details[edit_id].size;
             }
-            if (command == "outline_size")
+            if (edit_commands == "outline_size")
             {
                 cin >> particle_details[edit_id].outline_size;
             }
-            if (command == "outline_size")
+            if (edit_commands == "outline_size")
             {
                 cin >> particle_details[edit_id].outline_size;
             }
-            if (command == "damp")
+            if (edit_commands == "damp")
             {
                 cin >> particle_details[edit_id].damp;
             }
-            if (command == "inside_r")
+            if (edit_commands == "inside_r")
             {
                 cin >> particle_details[edit_id].inside_r;
             }
                 
             
-            if (command == "inside_b")
+            if (edit_commands == "inside_b")
             {
                 cin >> particle_details[edit_id].inside_b;
             };
-            if (command == "inside_g")
+            if (edit_commands == "inside_g")
             {
                 cin >> particle_details[edit_id].inside_g;
             }
-            if (command == "outside_r")
+            if (edit_commands == "outside_r")
             {
                 cin >> particle_details[edit_id].outside_r;
             }
-            if (command == "outside_b")
+            if (edit_commands == "outside_b")
             {
                 cin >> particle_details[edit_id].outside_b;
             }
-            if (command == "outside_g")
+            if (edit_commands == "outside_g")
             {
                 cin >> particle_details[edit_id].outside_g;
             }
-            if (command == "connections")
+            if (edit_commands == "connections")
             {
                 cout << "id connection you are editing:";
                 cin >> connection_id;
@@ -183,8 +186,6 @@ void gameterminal()
                 cin >> particle_details[edit_id].connections[connection_id].distance;
                 cout << "Attraction:";
                 cin >> particle_details[edit_id].connections[connection_id].attraction;
-
-                
             }
             
                 cin >> edit_commands;
@@ -227,7 +228,7 @@ void gameterminal()
 
 int main()
 {
-    particle_detail tempdetails = add_particle_detail(5, 0, .995, 255, 255, 255, 255, 0, 0);
+    particle_detail tempdetails = add_particle_detail(5, 0, 1, 255, 255, 255, 255, 0, 0);
     tempdetails.connections[0].attraction = -.04;
     tempdetails.connections[0].distance = 25;
     particle_details.push_back(tempdetails);
@@ -289,8 +290,9 @@ int main()
     //vector<particle_details> *pd = &particle_detail;
     double funidamp = .9999;
     double unidamp = 1;
-    
-    
+    // vector<thread> threads;
+    // vector<thread> dthreads;
+    // thread thr1;
     while (window.isOpen())
     {    
         start = std::chrono::system_clock::now();
@@ -364,6 +366,7 @@ int main()
         map = change_map(map);
         velmap = dvelmap;
         //unidamp = pow(funidamp, (dt/20));
+        //threads = dthreads;
         for (int i = 0; i < allp.size(); i++)
         {
 
@@ -415,9 +418,11 @@ int main()
 
             //th.join();
         }
-
-        //cout << allp.size() - 1 <<endl;
-
+        //allp.size() - 1 <<endl;
+        // for (auto& thread : threads) 
+        // {
+        // thread.join();
+        // }   
         //cout << &allp << end;
         
         

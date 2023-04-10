@@ -91,7 +91,11 @@
     "random": "cpp",
     "iterator": "cpp",
     "thread": "cpp",
-    "utility": "cpp"
+    "utility": "cpp",
+    "__functional_base": "cpp",
+    "algorithm": "cpp",
+    "bit": "cpp",
+    "functional": "cpp"
   },
   "C_Cpp.errorSquiggles": "disabled"
 }
