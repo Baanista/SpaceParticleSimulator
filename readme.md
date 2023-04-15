@@ -13,6 +13,8 @@ Controls
 
 -press S to spawn grid of 5 by 5 particles at the mouse
 
+-press TAB to bring up the my custimized consol
+
 (message me for any questions)
 
 here is my discord(https://discord.gg/xYbyAZScMG)
