@@ -1,66 +1,30 @@
-// C++ program to demonstrate
-// multithreading using three
-// different callables.
+#include <string>
 #include <iostream>
 #include <thread>
+
 using namespace std;
 
-// A dummy function
-void foo(int Z)
+bool continuer = true;
+
+// The function we want to execute on the new thread.
+void task1(string msg)
 {
-for (int i = 0; i < Z; i++)
-{
-	cout << "Thread using function"
-			" pointer as callable\n";
-}
+    while (continuer)
+    {
+        cout << "task1 says: " << msg << endl;
+    }
+    
+    
 }
 
-// A callable object
-class thread_obj {
-public:
-	void operator()(int x)
-	{
-	for (int i = 0; i < x; i++)
-		cout << "Thread using function"
-				" object as callable\n";
-	}
-};
-
-// Driver code
 int main()
 {
-cout << "Threads 1 and 2 and 3 "
-		"operating independently" << endl;
+    // Constructs the new thread and runs it. Does not block execution.
+    thread t1(task1, "Hello");
 
-// This thread is launched by using
-// function pointer as callable
-thread th1(foo, 3);
-
-// This thread is launched by using
-// function object as callable
-thread th2(thread_obj(), 3);
-
-// Define a Lambda Expression
-auto f = [](int x)
-{
-	for (int i = 0; i < x; i++)
-	cout << "Thread using lambda"
-			" expression as callable\n";
-};
-
-// This thread is launched by using
-// lambda expression as callable
-thread th3(f, 3);
-
-// Wait for the threads to finish
-// Wait for thread t1 to finish
-th1.join();
-
-// Wait for thread t2 to finish
-th2.join();
-
-// Wait for thread t3 to finish
-th3.join();
-
-return 0;
+    // Do other things...
+    
+    cin >> continuer;
+    // Makes the main thread wait for the new thread to finish execution, therefore blocks its own execution.
+    t1.join();
 }

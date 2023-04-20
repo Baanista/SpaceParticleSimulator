@@ -11,7 +11,7 @@ using namespace std;
 // extern vector<particle_details> particle_detail;
 extern int worldsize[2];
 extern int chunk_size;
-
+double walldamp = .9;
 
 struct connection
     {
@@ -71,13 +71,13 @@ class particles
             return(dist);
         }
         
-        void update(int dt, int check, vector<particles> *particlesi, vector<int> neerby, double damper)
+        void update(int dt, int check, vector<particles> *particlesi, vector<int> neerby)
         {
 
             
 
-            x += vx * dt;
-            y += vy * dt;
+            x += vx;// * dt;
+            y += vy;// * dt;
             
 
             // vx *= damper;
@@ -190,25 +190,25 @@ class particles
         {
                                     if (x < 0) {
                 x = 1;
-                vx *= -1;
+                vx *= -walldamp;
                 //x += vx * 2;
                 //vx *= 0;
             }
             if (x > (chunk_size * worldsize[0]) - 1) {
                 x = chunk_size*worldsize[0] - 1;
-                vx *= -1;
+                vx *= -walldamp;
                 //x += vx * 2;
                 //vx *= 0;
             }
             if (y <= 0) {
                 y = 1;
-                vy *= -1;
+                vy *= -walldamp;
                // vy *= 0;
                 
             }
             if (y >= (chunk_size * worldsize[1]) - 1) {
                 y = chunk_size * worldsize[1] -1;
-                vy *= -1;
+                vy *= -walldamp;
                 //vy *= 0;
                 
                   
@@ -318,7 +318,36 @@ class particles
 };
 
 
+class Cell: public particles{
+    public:
+        float energy;
 
+
+        float size;
+        float outline_size;
+
+        int inside_r;
+        int inside_g;
+        int inside_b;
+
+        int outside_r;
+        int outside_g;
+        int outside_b;
+
+        void cell_update(int dt, int check, vector<particles> *particlesi, vector<int> neerby)
+        {
+            update(dt, check, particlesi, neerby);
+        }
+
+        Cell reproduce()
+        {
+            Cell outputcell;
+
+            return(outputcell);
+        }
+
+
+};
 
 
 
