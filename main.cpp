@@ -21,6 +21,8 @@ int selected_id = 0;
 int worldsize[2] = {10, 6};
 int chunk_size = 100;
 vector<particles> allp;
+vector<Cell> allcells;
+vector<Cell> *allcells_adr = &allcells;
 vector<particle_detail> particle_details;
 vector<particles> *allp_adr = &allp;
 
@@ -240,22 +242,24 @@ void onethread(int dt, int check, vector<particles> *particlesi, vector<int> nee
 
 int main()
 {
-    particle_detail tempdetails = add_particle_detail(5, 0, 1, 255, 255, 255, 255, 0, 0);
+    particle_detail tempdetails = add_particle_detail(10, 0, .99, 255, 255, 255, 255, 0, 0);
     tempdetails.connections[0].attraction = -.01;
-    tempdetails.connections[0].distance = 0;
+    tempdetails.connections[0].distance = 25;
     tempdetails.connections[1].attraction = -.1;
     tempdetails.connections[1].distance = 40;
     particle_details.push_back(tempdetails);
     
-    tempdetails = add_particle_detail(5, 0, .9, 255, 255, 0, 255, 255, 255);
+    tempdetails = add_particle_detail(5, 0, .99, 255, 255, 0, 255, 255, 255);
     tempdetails.connections[1].attraction = -.02;
     tempdetails.connections[1].distance = 40;
     tempdetails.connections[0].attraction = .01;
     tempdetails.connections[0].distance = 20;
     particle_details.push_back(tempdetails);
-    tempdetails = add_particle_detail(3, 0, 1, 0, 255, 0, 255, 255, 255);
-    tempdetails.connections[2].attraction = .04;
+    tempdetails = add_particle_detail(3, 0, 1, 0, 255, 0, 0, 0, 255);
+    tempdetails.connections[2].attraction = .001;
     tempdetails.connections[2].distance = 20;
+    particle_details.push_back(tempdetails);
+    tempdetails = add_particle_detail(3, 0, 1, 0, 255, 0, 0, 0, 255);
     particle_details.push_back(tempdetails);
     // particle_details[0].size = 5;
     // particle_details[0].r = 255;
@@ -266,11 +270,33 @@ int main()
     // particle_detail[0].connection[0].id = 0;
     // particle_detail[0].connection[0].dist = 10;
     // particle_detail[0].connection[0].attraction = 0.001;    
-    
-    
+    Cell tempcell;
+    tempcell.size = 1000;
+    tempcell.max_size = 7;
+    tempcell.outline_size = 2;
+    tempcell.inside_r = 0;
+    tempcell.inside_b = 0;
+    tempcell.inside_g = 0;
+
+    tempcell.outside_r = 255;
+    tempcell.outside_b = 255;
+    tempcell.outside_g = 255;
+
+    tempcell.x = 100;
+    tempcell.y= 100;
+    tempcell.mutation_rate = .1;
+    // particle_detail[0].connection[0].id = 0;
+    // particle_detail[0].connection[0].dist = 10;
+    // particle_detail[0].connection[0].attraction = 0.001;    
+    tempcell.energy = 100;
+
+    allcells.push_back(tempcell);
 
     vector<vector<vector<int> > > map(worldsize[0], vector<vector<int> >(worldsize[1]));
     vector<vector<vector<int> > > dmap(worldsize[0], vector<vector<int> >(worldsize[1]));
+
+    vector<vector<vector<int> > > cell_map(worldsize[0], vector<vector<int> >(worldsize[1]));
+    vector<vector<vector<int> > > cell_dmap(worldsize[0], vector<vector<int> >(worldsize[1]));
 
     int randomthing = random_in_range(0, 10);
     cout << randomthing << endl;
@@ -403,11 +429,11 @@ int main()
         }
         
         map = dmap;
-        
+        cell_map = dmap;
         //velmap = dvelmap;
         //unidamp = pow(funidamp, (dt/20));
         //threads = dthreads;
-
+        dt = 1;
         
         for (int i = 0; i < allp.size(); i++)
         {
@@ -438,7 +464,7 @@ int main()
             allp[i].vx += vxm;
             
             allp[i].vy += vym;
-            allp[i].vy += .008;
+            //allp[i].vy += .008;
             // cout << gmap[cx][cy] << endl;
             // cout << gmap[cx][cy] << endl;
             //cout << i << '|' << velmap[cx][cy][0] << ';' << velmap[cx][cy][1] << endl;
@@ -457,7 +483,7 @@ int main()
             cy = allp[i].y/chunk_size;
             //printvecint(map[cx][cy]); 
             
-            allp[i].update(dt, i, allp_adr, map[cx][cy]);
+            //allp[i].update(dt, i, allp_adr, map[cx][cy]);
 
             threads.emplace_back([&allp, i, dt, &allp_adr, &map]() {
                 int cx = allp[i].x / chunk_size;
@@ -487,8 +513,61 @@ int main()
         {
         thread.join();
         }   
+
+        cell_map = change_map(cell_map);
         //cout << &allp << end;
-        
+        for (int i = 0; i < allcells.size(); i++)
+        {
+            //allcells
+
+
+            sf::CircleShape shape(allcells[i].size);
+
+            shape.setOutlineThickness(allcells[i].outline_size);
+            shape.setFillColor(sf::Color(allcells[i].inside_r, allcells[i].inside_g, allcells[i].inside_b));
+            shape.setOutlineColor(sf::Color(allcells[i].outside_r, allcells[i].outside_g, allcells[i].outside_b));
+            shape.setPosition(allcells[i].x - allcells[i].size, allcells[i].y- allcells[i].size);
+            window.draw(shape);
+            
+            cx = allcells[i].x/chunk_size;
+            cy = allcells[i].y/chunk_size;
+
+            cell_map[cx][cy].push_back(i);
+            
+        }
+
+        for (int i = 0; i < allcells.size(); i++)
+        {
+            cx = allcells[i].x/chunk_size;
+            cy = allcells[i].y/chunk_size;
+            //void cell_update(int dt, int check, vector<particles> *particlesi, vector<particles> *cellsi, vector<int> particle_neerby, vector<int> cell_neerby)
+            //cout << "here" << endl;
+            //printvecint(map[cx][cy]);
+
+            //cout << allcells_adr << endl;
+            allcells[i].cell_update(dt, i, allp_adr, allcells_adr, map[cx][cy], cell_map[cx][cy]);
+            if (allcells[i].size > allcells[i].max_size)
+            {
+                allcells[i].energy *= .45;
+                Cell next_cell = allcells[i];
+                next_cell = next_cell.reproduce(next_cell);
+                next_cell.check_border();
+                allcells.push_back(next_cell);
+            }
+
+        }
+        vector<Cell> temp_temp_allcells;
+        vector<Cell> temp_allcells = allcells;
+        allcells = temp_temp_allcells;
+
+        //cout << temp_allcells.size() << endl;
+        for (int i = 0; i < temp_allcells.size(); i++)
+        {
+            if (allcells[i].dead == false)
+            {
+                allcells.push_back(temp_allcells[i]);
+            }
+        }
         //window.draw(text);
         if (held)
         {
@@ -499,6 +578,7 @@ int main()
             allp[allp.size() - 1].id = selected_id;
             
         }
+
         //(vector<vector<double> > gmap, int worldsize[2], int chunk_size, vector<vector<vector<double> > > defalt)
         
         //cout << velmap[0][0][1] << cout << ','; cout << velmap[0][0][1] << endl;
@@ -522,6 +602,7 @@ int main()
         // //cout <<  allp.size() << endl;
         // dt = 1;
         //dt = dt * .1;
+        
     }
     cin.get();
     return 0;
