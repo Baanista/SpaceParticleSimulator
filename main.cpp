@@ -242,7 +242,7 @@ void onethread(int dt, int check, vector<particles> *particlesi, vector<int> nee
 
 int main()
 {
-    particle_detail tempdetails = add_particle_detail(10, 0, .99, 255, 255, 255, 255, 0, 0);
+    particle_detail tempdetails = add_particle_detail(10, 0, .09, 255, 255, 255, 255, 0, 0);
     tempdetails.connections[0].attraction = -.01;
     tempdetails.connections[0].distance = 25;
     tempdetails.connections[1].attraction = -.1;
@@ -514,7 +514,7 @@ int main()
         thread.join();
         }   
         //change
-        cell_map = change_map(cell_map);
+        
         //cout << &allp << end;
         for (int i = 0; i < allcells.size(); i++)
         {
@@ -535,7 +535,7 @@ int main()
             cell_map[cx][cy].push_back(i);
             
         }
-
+        cell_map = change_map(cell_map);
         for (int i = 0; i < allcells.size(); i++)
         {
             cx = allcells[i].x/chunk_size;
@@ -556,6 +556,7 @@ int main()
             }
 
         }
+        
         vector<Cell> temp_temp_allcells;
         vector<Cell> temp_allcells = allcells;
         allcells = temp_temp_allcells;

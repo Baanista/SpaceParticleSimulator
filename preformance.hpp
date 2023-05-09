@@ -21,15 +21,12 @@ int random_in_range(int lower_bound, int upper_bound) {
     return random_number;
 }
 
-int random_float(int lower_bound, int upper_bound) {
-    // Seed the random number generator with the current time
+float randomFloat()
+{
     srand(rand());
-
-    // Generate a random number between lower_bound and upper_bound, inclusive
-    int random_number = lower_bound + std::rand() % (upper_bound - lower_bound + 1);
-
-    return random_number;
+    return (float)(rand()) / (float)(rand());
 }
+
 
 pair<double, double> addgravvelocityfeild(double x, double y, double ox, double oy, double attraction, int chunk_size)
 {

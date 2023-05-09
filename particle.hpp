@@ -17,10 +17,6 @@ extern int chunk_size;
 double walldamp = .1;
 
 
-float randomFloat()
-{
-    return (float)(rand()) / (float)(rand());
-}
 
 struct connection
     {
@@ -583,21 +579,23 @@ class Cell: public particles{
                     particlesi->at(a).move(x, y, dist, attractiontemp);
 
                     particlesi->at(a).check_border();
-                    // if (p.size*2 < temp_size)
-                    // {
-                    //     cout << "eaten" << endl;
-                    //     energy += p.energy;
-                    //     p.energy = 0;
-                    //     p.dead = true;
-                    // }
-                    // if (temp_size*2 < p.size)
-                    // {
+                    if (p.size*2 < temp_size)
+                    {
+                        cout << "eaten" << endl;
+                        energy += p.energy;
+                        p.energy = 0;
+                        p.size = 0;
+                        p.dead = true;
+                    }
+                    if (temp_size*2 < p.size)
+                    {
                         
-                    //     cout << "eaten" << endl;
-                    //     p.energy += energy;
-                    //     energy = 0;
-                    //     dead = true;
-                    // }
+                        cout << "eaten" << endl;
+                        p.energy += energy;
+                        energy = 0;
+                        size = 0;
+                        dead = true;
+                    }
                     // tvx = vx;
                     // tvy = vy;
                     // //cout << tvy / ((tvy + p.vy) *2) << endl;
@@ -652,10 +650,10 @@ class Cell: public particles{
             
             Particle_Update(dt, check, particlesi, particle_neerby);
             Cell_Update(dt, check, cellsi, cell_neerby);
-            energy += .001 * dt;
+            energy += .002 * dt;
             if (random_in_range(0, 1) == 0)
             {
-                energy += .002 * dt;
+                energy += .008 * dt;
             }
             size = sqrt(energy);
 
@@ -665,10 +663,10 @@ class Cell: public particles{
             {
                 dead = true;
             }
-            else if(collisions > 100 * size)
-            {
-                dead = true;
-            }
+            // else if(collisions > 800 * size)
+            // {
+            //     dead = true;
+            // }
             else if(energy < max_size * .25)
             {
                 cout << "consumed" << endl;
@@ -682,9 +680,9 @@ class Cell: public particles{
             
             
             //cout << "rbgf" << outputcell.inside_r << ", " << outputcell.inside_g << ", " << outputcell.inside_b << endl;
-            if (random_in_range(0, 1000) < mutation_rate * 1000)
+            if (randomFloat() < mutation_rate)
             {
-                //cout << "mut" << endl;
+                cout << "mut" << endl;
                 int mut_amount = 50;
                 outputcell.inside_r += random_in_range(-mut_amount, mut_amount);
                 
@@ -693,7 +691,7 @@ class Cell: public particles{
                 outputcell.inside_b += random_in_range(-mut_amount, mut_amount);
 
                 //cout << "rbgi" << outputcell.inside_r << ", " << outputcell.inside_g << ", " << outputcell.inside_b << endl;
-                outputcell.max_size += random_in_range(-1, 1);
+                outputcell.max_size += random_in_range(-5, 5);
                 if (outputcell.max_size < 3)
                 {
                     outputcell.max_size  = 3;
