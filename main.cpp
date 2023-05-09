@@ -513,7 +513,7 @@ int main()
         {
         thread.join();
         }   
-
+        //change
         cell_map = change_map(cell_map);
         //cout << &allp << end;
         for (int i = 0; i < allcells.size(); i++)
