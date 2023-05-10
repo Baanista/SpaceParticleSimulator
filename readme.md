@@ -1,3 +1,7 @@
+# OverView
+
+This program is meant to simulate particle physics and evolutionary patterns.
+
 # Runing the Program
 
 1.) in terminal go into the projects directory
@@ -16,6 +20,13 @@
 
 here is my discord(https://discord.gg/xYbyAZScMG)
 
+# How particles work?
+
+Each particle has a position, velocity, and a id. The ID determines how the particle works and how it looks like. It's behavior is: how it interacts with other and its air resistance[double damp;]
+
+# How Cells work?
+
+Every cell inherits the properties of the particle ID 0. Each cell has a genome. Genome determines how the cell looks, and the max_size. Each cell produces energy every tick. The size of the cell is determined by the square root of the amount of energy.
 
 ## Preditor and Pray relationship
 ![Screen Shot 2023-05-09 at 10 16 18 PM](https://github.com/Baanista/SpaceParticleSimulator/assets/110647786/23422e2a-e7e0-42c8-a01e-0433ee5a1a63)
