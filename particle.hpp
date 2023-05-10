@@ -334,9 +334,17 @@ class Phermon: public particles{
     public:
         int id = 2;
     
-        int r;
-        int g;
-        int b;
+        int inside_r;
+        int inside_g;
+        int inside_b;
+
+        int outside_r;
+        int outside_g;
+        int outside_b;
+        int duration;
+
+
+        // Phermon()
 
 
 };
@@ -533,7 +541,7 @@ class Cell: public particles{
                     //cout << particle_details[id].connections[p.id][0].attraction;
 
                 //old:
-                neeraddvelocity(p.x, p.y, particle_details[id].connections[p.id].attraction, particle_details[id].connections[p.id].distance, dist);
+                neeraddvelocity(p.x, p.y, particle_details[id].connections[p.id].attraction, particle_details[id].connections[p.id].distance * .25 * size, dist);
                 //new:
                 //neeraddvelocity(p.x, p.y, particle_details[id].connections[p.id].attraction, size + 5, dist);
 
@@ -582,7 +590,7 @@ class Cell: public particles{
                     if (p.size*2 < temp_size)
                     {
                         cout << "eaten" << endl;
-                        energy += p.energy;
+                        energy += p.energy * .5;
                         p.energy = 0;
                         p.size = 0;
                         p.dead = true;
@@ -591,11 +599,12 @@ class Cell: public particles{
                     {
                         
                         cout << "eaten" << endl;
-                        p.energy += energy;
+                        p.energy += energy * .5;
                         energy = 0;
                         size = 0;
                         dead = true;
                     }
+
                     // tvx = vx;
                     // tvy = vy;
                     // //cout << tvy / ((tvy + p.vy) *2) << endl;
@@ -655,6 +664,7 @@ class Cell: public particles{
             {
                 energy += .008 * dt;
             }
+            energy -= size * .02;
             size = sqrt(energy);
 
             lifetime += 1 * dt;
@@ -663,10 +673,10 @@ class Cell: public particles{
             {
                 dead = true;
             }
-            // else if(collisions > 800 * size)
-            // {
-            //     dead = true;
-            // }
+            else if(collisions > 2000 * size)
+            {
+                dead = true;
+            }
             else if(energy < max_size * .25)
             {
                 cout << "consumed" << endl;
@@ -691,7 +701,7 @@ class Cell: public particles{
                 outputcell.inside_b += random_in_range(-mut_amount, mut_amount);
 
                 //cout << "rbgi" << outputcell.inside_r << ", " << outputcell.inside_g << ", " << outputcell.inside_b << endl;
-                outputcell.max_size += random_in_range(-5, 5);
+                outputcell.max_size += random_in_range(-2, 2);
                 if (outputcell.max_size < 3)
                 {
                     outputcell.max_size  = 3;

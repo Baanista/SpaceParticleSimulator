@@ -242,7 +242,7 @@ void onethread(int dt, int check, vector<particles> *particlesi, vector<int> nee
 
 int main()
 {
-    particle_detail tempdetails = add_particle_detail(10, 0, .09, 255, 255, 255, 255, 0, 0);
+    particle_detail tempdetails = add_particle_detail(10, 0, .9, 255, 255, 255, 255, 0, 0);
     tempdetails.connections[0].attraction = -.01;
     tempdetails.connections[0].distance = 25;
     tempdetails.connections[1].attraction = -.1;
@@ -272,7 +272,7 @@ int main()
     // particle_detail[0].connection[0].attraction = 0.001;    
     Cell tempcell;
     tempcell.size = 1000;
-    tempcell.max_size = 7;
+    tempcell.max_size = 5;
     tempcell.outline_size = 2;
     tempcell.inside_r = 0;
     tempcell.inside_b = 0;
@@ -433,7 +433,7 @@ int main()
         //velmap = dvelmap;
         //unidamp = pow(funidamp, (dt/20));
         //threads = dthreads;
-        dt = 1;
+        dt = 20;
         
         for (int i = 0; i < allp.size(); i++)
         {
@@ -548,7 +548,7 @@ int main()
             allcells[i].cell_update(dt, i, allp_adr, allcells_adr, map[cx][cy], cell_map[cx][cy]);
             if (allcells[i].size > allcells[i].max_size)
             {
-                allcells[i].energy *= .45;
+                allcells[i].energy = allcells[i].max_size * allcells[i].max_size * .45;
                 Cell next_cell = allcells[i];
                 next_cell = next_cell.reproduce(next_cell);
                 next_cell.check_border();
@@ -569,6 +569,8 @@ int main()
                 allcells.push_back(temp_allcells[i]);
             }
         }
+
+        
         //window.draw(text);
         if (held)
         {
