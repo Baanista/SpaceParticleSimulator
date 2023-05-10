@@ -26,7 +26,7 @@ Each particle has a position, velocity, and a id. The ID determines how the part
 
 # How Cells work?
 
-Every cell inherits the properties of the particle ID 0. Each cell has a genome. Genome determines how the cell looks, and the max_size. Each cell produces energy every tick. The size of the cell is determined by the square root of the amount of energy.
+Every cell inherits the properties of the particle ID 0. Each cell has a genome. Genome determines how the cell looks, and the max_size. Each cell produces energy every tick. The size of the cell is determined by the square root of the amount of energy. The bigger the size of the cell the more energy it takes up per tick. If a cell is 2 times larger than a cell that it collides with the larger cell gets all the energy of the other cell and kills that cell. Each tick the lifetime counter goes up. If the counter extends max_size * 1000 than the cell is dead.
 
 ## Preditor and Pray relationship
 ![Screen Shot 2023-05-09 at 10 16 18 PM](https://github.com/Baanista/SpaceParticleSimulator/assets/110647786/23422e2a-e7e0-42c8-a01e-0433ee5a1a63)
