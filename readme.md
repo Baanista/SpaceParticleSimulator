@@ -27,12 +27,17 @@ here is my discord(https://discord.gg/xYbyAZScMG)
 
 New Features Comming Soon!
 
--Phermons
+-Pheromons
 
-    -Cells can emmit phemons using their cell response mechanism. They can control the spread, velocity, color, and duration of each pherimon.
+    -Cells can emmit pheromones using their cell response mechanism. They can control the spread, velocity, color, and duration of each pheromone.
 
-    -Pheremon Map: each chunk in th map will be contain the avrage inside and outline color inside that chunk. The information in each chunk will be given to the cells "brain".
+    -Pheromon Map: each chunk in th map will be contain the avrage inside and outline color inside that chunk. The information in each chunk will be given to the cells "brain".
 
+-Cell Response Mechanism("Brain")
+
+	-Input: The inputs are energy, lifetime, size, maxsize, and pheromone chunk details.
+	
+	-Output: The cell controls the details of the emitted pheromones. The cell can also control its direction. The cell can also control how much they go in that direction.
 
 
 
