@@ -28,7 +28,9 @@ here is my discord(https://discord.gg/xYbyAZScMG)
 New Features Comming Soon!
 
 -Phermons
+
     -Cells can emmit phemons using their cell response mechanism. They can control the spread, velocity, color, and duration of each pherimon.
+
     -Pheremon Map: each chunk in th map will be contain the avrage inside and outline color inside that chunk. The information in each chunk will be given to the cells "brain".
 
 
