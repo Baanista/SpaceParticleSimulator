@@ -653,6 +653,12 @@ class Cell: public particles{
             }
             
         }
+
+		void rotation_pherome_detection()
+		{
+		
+		
+		}
         void cell_update(int dt, int check, vector<particles> *particlesi, vector<Cell> *cellsi, vector<int> particle_neerby, vector<int> cell_neerby)
         {
 
