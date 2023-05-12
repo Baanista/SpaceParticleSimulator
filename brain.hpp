@@ -32,13 +32,19 @@ class Nuron
             return(output);
         }
 
-        void Mutate(double change_amount_weight, int change_amount_Pass_Down)
+        void Mutate(double change_amount_weight, int change_amount_Pass_Down, int biggest_element)
         {
             w1 += Positive_and_Negative_randomFloat() * change_amount_weight;
             w2 += Positive_and_Negative_randomFloat() * change_amount_weight;
             Pass_Down[0] += random_in_range(-change_amount_Pass_Down, change_amount_Pass_Down);
             Pass_Down[1] += random_in_range(-change_amount_Pass_Down, change_amount_Pass_Down);
             Pass_Down[2] += random_in_range(-change_amount_Pass_Down, change_amount_Pass_Down);
+
+            if (Pass_Down[0] < 0){Pass_Down[0] = 0}if (Pass_Down[0] > biggest_element){{Pass_Down[0] = biggest_element - 1}}
+
+            if (Pass_Down[1] < 0){Pass_Down[1] = 0}if (Pass_Down[1] > biggest_element){{Pass_Down[1] = biggest_element - 1}}
+        
+            if (Pass_Down[2] < 0){Pass_Down[2] = 0}if (Pass_Down[2] >= biggest_element){{Pass_Down[0] = biggest_element - 1}}
         }
 }
 
@@ -53,6 +59,8 @@ class Cell_Responce_Mechanism()
             for (int i = 0; i < Nurons.size(); i++)
             {
                 next_Pass_Down = Nurons[i].activate();
+                Nurons.input = next_Pass_Down
+                
             }
         }
 }
