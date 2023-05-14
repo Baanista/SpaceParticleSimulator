@@ -217,10 +217,10 @@ void gameterminal()
     }
 }
 
-void onethread(int dt, int check, vector<particles> *particlesi, vector<int> neerby)
+void onethread(int dt, int check, vector<particles> *particlesi, vector<int> nearby)
 {
     //allp[i].update(dt, i, allp_adr, map[cx][cy]);
-    allp[check].update(dt, check, particlesi, neerby);
+    allp[check].update(dt, check, particlesi, nearby);
 }
 
 int main()
@@ -492,7 +492,7 @@ int main()
         {
             cx = allcells[i].x/chunk_size;
             cy = allcells[i].y/chunk_size;
-            //void cell_update(int dt, int check, vector<particles> *particlesi, vector<particles> *cellsi, vector<int> particle_neerby, vector<int> cell_neerby)
+            //void cell_update(int dt, int check, vector<particles> *particlesi, vector<particles> *cellsi, vector<int> particle_nearby, vector<int> cell_nearby)
             //cout << "here" << endl;
             //printvecint(map[cx][cy]);
 
