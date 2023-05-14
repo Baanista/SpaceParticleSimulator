@@ -16,7 +16,7 @@ int random_in_range(int lower_bound, int upper_bound) {
     srand(rand());
 
     // Generate a random number between lower_bound and upper_bound, inclusive
-    int random_number = lower_bound + std::rand() % (upper_bound - lower_bound + 1);
+    int random_number = lower_bound + rand() % (upper_bound - lower_bound + 1);
 
     return random_number;
 }
@@ -71,22 +71,21 @@ vector<vector<vector<double> > > velocityfeild(vector<vector<double> > gmap, int
         for (int y = 0; y < gmap[0].size(); y++)
         {
                 
-                for (int i = 0; i < gmap.size(); i++)
+            for (int i = 0; i < gmap.size(); i++)
+            {
+                for (int a = 0; a < gmap[0].size(); a++)
                 {
-                    for (int a = 0; a < gmap[0].size(); a++)
-                    {
-                        //cout << x << ',' << y << endl;
-                        //cout << gmap[i][a] << endl;
-                        pair<double, double> temp = addgravvelocityfeild(x, y, i, a, gmap[i][a], chunk_size);
-                        out[x][y][0] += temp.first * -.0000001;
-                        out[x][y][1] += temp.second * -.0000001;
-                        //cout << temp.first << ';' << temp.second << '|' << '2' << endl;
-                        //cout << gmap[i][a] << ':' << temp.first << ',' << temp.second << endl;
-                    }
+                    //cout << x << ',' << y << endl;
+                    //cout << gmap[i][a] << endl;
+                    pair<double, double> temp = addgravvelocityfeild(x, y, i, a, gmap[i][a], chunk_size);
+                    out[x][y][0] += temp.first * -.0000001;
+                    out[x][y][1] += temp.second * -.0000001;
+                    //cout << temp.first << ';' << temp.second << '|' << '2' << endl;
+                    //cout << gmap[i][a] << ':' << temp.first << ',' << temp.second << endl;
                 }
             }
+        }
     }
-
     return out;
 }
 

@@ -62,7 +62,6 @@ class particles
         
         
         particles() {
-
             void move(double ox, double oy, int attraction);
 
         }
@@ -81,14 +80,11 @@ class particles
             return(dist);
         }
         
-        void update(int dt, int check, vector<particles> *particlesi, vector<int> neerby)
+        void update(int dt, int check, vector<particles> *particlesi, vector<int> nearby)
         {
-
-            
-
             x += vx;// * dt;
             y += vy;// * dt;
-            
+
 
             // vx *= damper;
             // vy *= damper;
@@ -107,10 +103,9 @@ class particles
             double power;
             // printf("speed:");
             // cout << sqrt(vx*vx + vy*vy) << endl;
-            for (int i = 0; i < neerby.size(); i++)
-            
+            for (int i = 0; i < nearby.size(); i++)
             {
-                a = neerby[i];
+                a = nearby[i];
                 //a = i;  
                 //cout << a << endl;
                 p = particlesi->at(a);
@@ -138,9 +133,9 @@ class particles
             double tvy;
             
             for (int j = 0; j < 8; j++){
-            for (int i = 0; i < neerby.size(); i++)
+            for (int i = 0; i < nearby.size(); i++)
                 {
-                a = neerby[i];
+                a = nearby[i];
                 //a = i;  
                 //cout << a << endl;
                 p = particlesi->at(a);
@@ -396,11 +391,8 @@ class Cell: public particles{
         int collisions = 0;
         bool dead = false;
         
-        void Particle_Update(int dt, int check, vector<particles> *particlesi, vector<int> neerby)
+        void Particle_Update(int dt, int check, vector<particles> *particlesi, vector<int> nearby)
         {
-
-            
-
             x += vx;// * dt;
             y += vy;// * dt;
             
@@ -422,10 +414,10 @@ class Cell: public particles{
             double power;
             // printf("speed:");
             // cout << sqrt(vx*vx + vy*vy) << endl;
-            for (int i = 0; i < neerby.size(); i++)
+            for (int i = 0; i < nearby.size(); i++)
             {
                 
-                a = neerby[i];
+                a = nearby[i];
                 //a = i;  
                 //cout << a << endl;
                 p = particlesi->at(a);
@@ -453,9 +445,9 @@ class Cell: public particles{
             double tvx;
             double tvy;
             for (int j = 0; j < 8; j++){
-            for (int i = 0; i < neerby.size(); i++)
+            for (int i = 0; i < nearby.size(); i++)
                 {
-                a = neerby[i];
+                a = nearby[i];
                 //a = i;  
                 //cout << a << endl;
                 p = particlesi->at(a);
@@ -517,7 +509,7 @@ class Cell: public particles{
             check_border();
         }
 
-        void Cell_Update(int dt, int check, vector<Cell> *particlesi, vector<int> neerby)
+        void Cell_Update(int dt, int check, vector<Cell> *particlesi, vector<int> nearby)
         {
 
             
@@ -543,10 +535,10 @@ class Cell: public particles{
             double power;
             // printf("speed:");
             // cout << sqrt(vx*vx + vy*vy) << endl;
-            for (int i = 0; i < neerby.size(); i++)
+            for (int i = 0; i < nearby.size(); i++)
             {
                 
-                a = neerby[i];
+                a = nearby[i];
                 //a = i;  
                 //cout << a << endl;
                 p = particlesi->at(a);
@@ -578,94 +570,65 @@ class Cell: public particles{
             double tvy;
             double temp_size =  size;
             for (int j = 0; j < 8; j++){
-            for (int i = 0; i < neerby.size(); i++)
+                for (int i = 0; i < nearby.size(); i++)
                 {
-                a = neerby[i];
-                //a = i;  
-                //cout << a << endl;
-                p = particlesi->at(a);
-                dx = x - p.x;
-                dy = y - p.y;
-                dist = sqrt(dx*dx + dy*dy);
-                int (particles::*Pmove)(double, double, double, double);
-                if (dist <= size + p.size && dist != 0)
-                {
-                    
-                    //cout << '8008' << endl;
-                    // power = 1 / sqrt(vx*vx + vy*vy);
-                    // //cout << vx << ',' << vy << endl;
-                    // addvelocity(p.x, p.y, power * .5);
-                    // p.addvelocity(x, y, power * .5);
-                    
-                    attractiontemp = ((size + p.size) - dist) * .5;
-                    
-                    
-                    tvx = vx;
-                    tvy = vy;
-                    collisions ++;
-                    circle_collision_result(dist, p.x, p.y, p.vx, p.vy, p.size, size);
-                    p.collisions ++;
-                    particlesi->at(a).circle_collision_result(dist, x, y, tvx, tvy, size, p.size);
-                    
-
-                    move(p.x, p.y, dist, attractiontemp);
-                    particlesi->at(a).move(x, y, dist, attractiontemp);
-
-                    particlesi->at(a).check_border();
-                    if (p.size*2 < temp_size)
+                    a = nearby[i];
+                    //a = i;  
+                    //cout << a << endl;
+                    p = particlesi->at(a);
+                    dx = x - p.x;
+                    dy = y - p.y;
+                    dist = sqrt(dx*dx + dy*dy);
+                    int (particles::*Pmove)(double, double, double, double);
+                    if (dist <= size + p.size && dist != 0)
                     {
-                        //cout << "eaten" << endl;
-                        energy += p.energy * .5;
-                        p.energy = 0;
-                        p.size = 0;
-                        p.dead = true;
-                    }
-                    if (temp_size*2 < p.size)
-                    {
-                        
-                        //cout << "eaten" << endl;
-                        p.energy += energy * .5;
-                        energy = 0;
-                        size = 0;
-                        dead = true;
-                    }
+                        attractiontemp = ((size + p.size) - dist) * .5;
 
-                    // tvx = vx;
-                    // tvy = vy;
-                    // //cout << tvy / ((tvy + p.vy) *2) << endl;
-                    // if (tvx + p.vx != 0)
-                    // {
-                    // vx *= tvx / ((tvx + p.vx) *2);
-                    // p.vx *= p.vx / ((tvx + p.vx) *2);
-                    // }
-                    // if (tvy + p.vy != 0)
-                    // {
-                        
-                    // vy *= tvy / ((tvy + p.vy) *2);
-                    // p.vy *= p.vy / ((tvy + p.vy) *2);
-                    // }
+                        tvx = vx;
+                        tvy = vy;
+                        collisions ++;
+                        circle_collision_result(dist, p.x, p.y, p.vx, p.vy, p.size, size);
+                        p.collisions ++;
+                        particlesi->at(a).circle_collision_result(dist, x, y, tvx, tvy, size, p.size);
+
+
+                        move(p.x, p.y, dist, attractiontemp);
+                        particlesi->at(a).move(x, y, dist, attractiontemp);
+
+                        particlesi->at(a).check_border();
+                        if (p.size*2 < temp_size)
+                        {
+                            cout << "eaten" << endl;
+                            energy += p.energy * .5;
+                            p.energy = 0;
+                            p.size = 0;
+                            p.dead = true;
+                        }
+                        if (temp_size*2 < p.size)
+                        {
+                            
+                            cout << "eaten" << endl;
+                            p.energy += energy * .5;
+                            energy = 0;
+                            size = 0;
+                            dead = true;
+                        }
+                    }
                 }
-
-
-                    
-            }}
-        
-
-
-
+            }
             //x += vx;
             //y += vy;      
             //cout << 'd';
             //cout << x << ',' << y << endl;
             check_border();
         }
-        void check_near(int dt, int check, vector<particles> *particlesi, vector<int> neerby)
+        void check_near(int dt, int check, vector<particles> *particlesi, vector<int> nearby)
         {
             particles p;
             int a;
-            for (int i = 0; i < neerby.size(); i++)
+            for (int i = 0; i < nearby.size(); i++)
             {
-                a = neerby[i];
+                a = nearby[i];
                 //a = i;  
                 //cout << a << endl;
                 p = particlesi->at(a);
@@ -681,15 +644,13 @@ class Cell: public particles{
 
 		void rotation_pherome_detection()
 		{
-		
-		
+            //FUTURE USE
 		}
-        void cell_update(int dt, int check, vector<particles> *particlesi, vector<Cell> *cellsi, vector<int> particle_neerby, vector<int> cell_neerby)
-        {
 
-            
-            Particle_Update(dt, check, particlesi, particle_neerby);
-            Cell_Update(dt, check, cellsi, cell_neerby);
+        void cell_update(int dt, int check, vector<particles> *particlesi, vector<Cell> *cellsi, vector<int> particle_nearby, vector<int> cell_nearby)
+        {  
+            Particle_Update(dt, check, particlesi, particle_nearby);
+            Cell_Update(dt, check, cellsi, cell_nearby);
             energy += .002 * dt;
             if (random_in_range(0, 1) == 0)
             {
@@ -737,49 +698,44 @@ class Cell: public particles{
                 {
                     outputcell.max_size  = 3;
                 }
-
-  
-
-                
             }
             
             outputcell.x += random_in_range(-1, 1) * outputcell.size * 2;
             outputcell.y += random_in_range(-1, 1) * outputcell.size * 2;
-            if (outputcell.inside_r > 255)
-                {
-                    outputcell.inside_r = 255;
-                }
-                if (outputcell.inside_r < 0)
-                {
-                    outputcell.inside_r = 0;
-                }
-                if (outputcell.inside_g > 255)
-                {
-                    outputcell.inside_g = 255;
-                }
-                if (outputcell.inside_g < 0)
-                {
-                    outputcell.inside_g = 0;
-                }
 
-                if (outputcell.inside_b > 255)
-                {
-                    outputcell.inside_b = 255;
-                }
-                if (outputcell.inside_b < 0)
-                {
-                    outputcell.inside_b = 0;
-                }
+            if (outputcell.inside_r > 255)
+            {
+                outputcell.inside_r = 255;
+            }
+            if (outputcell.inside_r < 0)
+            {
+                outputcell.inside_r = 0;
+            }
+
+            if (outputcell.inside_g > 255)
+            {
+                outputcell.inside_g = 255;
+            }
+            if (outputcell.inside_g < 0)
+            {
+                outputcell.inside_g = 0;
+            }
+
+            if (outputcell.inside_b > 255)
+            {
+                outputcell.inside_b = 255;
+            }
+            if (outputcell.inside_b < 0)
+            {
+                outputcell.inside_b = 0;
+            }
             //cout << "rbg" << outputcell.inside_r << ", " << outputcell.inside_g << ", " << outputcell.inside_b << endl;
             outputcell.lifetime = 0;
             outputcell.dead = false;
             outputcell.collisions = 0;
             return(outputcell);
         }
-
-
 };
-
 
 
 #endif

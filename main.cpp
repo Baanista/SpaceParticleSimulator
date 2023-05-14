@@ -14,7 +14,9 @@
 #include <random>
 #include <chrono>
 #include <thread>
+
 using namespace std;
+using namespace sf;
 
 int max_particle_types = 100;
 int selected_id = 0;
@@ -38,31 +40,25 @@ vector<vector<vector<int> > > chunk()
     {
         cx = allp[i].x / chunk_size;
         cy = allp[i].y / chunk_size;
-        
-        //len = sizeof(map[cx][cy]) / sizeof(map[cx][cy]);
+
         map[cx][cy].push_back(i);
     }
 
-
     return(map);
-
 }
 
-vector<vector<double> > defalt_gmap()
+vector<vector<double> > create_default_gmap()
 {
     vector<vector<double> > vec(worldsize[0], vector<double>(worldsize[1]));
     for (int j = 0; j < worldsize[0]; j++) {
-      std::fill(vec[j].begin(), vec[j].end(), 0.0);
+        fill(vec[j].begin(), vec[j].end(), 0.0);
     }
     return vec;
 }
 
-
-
 vector<vector<vector<double> > > vel_gmap()
 {
-    //vector<vector<vector<int> > > vec(worldsize[0], vector<vector<int> >(worldsize[1], vector<int>(2)));
-    std::vector<std::vector<std::vector<double> > > vec(worldsize[0], std::vector<std::vector<double> >(worldsize[1], std::vector<double>(2)));
+    vector<vector<vector<double> > > vec(worldsize[0], vector<vector<double> >(worldsize[1], vector<double>(2)));
 
     for (int x = 0; x < worldsize[0]; x++)
     {
@@ -76,11 +72,6 @@ vector<vector<vector<double> > > vel_gmap()
     }
     return vec;
 }
-
-// void threadedupdate(int anount_of_thread)
-// {
-
-// }
 
 particle_detail add_particle_detail(int size, int outline_size, double damp, int inside_r, int inside_b, int inside_g, int outside_r, int outside_b, int outside_g)
 {
@@ -98,7 +89,7 @@ particle_detail add_particle_detail(int size, int outline_size, double damp, int
     connection zero_connection;
     zero_connection.attraction = 0;
     zero_connection.distance = 0;
-    
+
     for (int i = 0; i < max_particle_types; i++)
     {
         output_details.connections.push_back(zero_connection);
@@ -226,19 +217,13 @@ void gameterminal()
             particle_detail tempdetails = add_particle_detail(size, outline_size, damp, inside_r, inside_b, inside_g,outside_r, outside_b, outside_g);
         }
     }
-}  
-
-void onethread(int dt, int check, vector<particles> *particlesi, vector<int> neerby)
-{
-    cout << "test";
-    //allp[i].update(dt, i, allp_adr, map[cx][cy]);
-    allp[check].update(dt, check, particlesi, neerby);
 }
-// void onethread()
-// {
-//     cout << "test";
-// }
 
+void onethread(int dt, int check, vector<particles> *particlesi, vector<int> nearby)
+{
+    //allp[i].update(dt, i, allp_adr, map[cx][cy]);
+    allp[check].update(dt, check, particlesi, nearby);
+}
 
 int main()
 {
@@ -287,7 +272,7 @@ int main()
     tempcell.mutation_rate = .02;
     // particle_detail[0].connection[0].id = 0;
     // particle_detail[0].connection[0].dist = 10;
-    // particle_detail[0].connection[0].attraction = 0.001;    
+    // particle_detail[0].connection[0].attraction = 0.001;
     tempcell.energy = 100;
 
     allcells.push_back(tempcell);
@@ -316,56 +301,22 @@ int main()
     vector<vector<vector<int> > > cell_map(worldsize[0], vector<vector<int> >(worldsize[1]));
     vector<vector<vector<int> > > cell_dmap(worldsize[0], vector<vector<int> >(worldsize[1]));
 
-    int randomthing = random_in_range(0, 10);
-    cout << randomthing << endl;
-    vector<vector<double> > dgmap = defalt_gmap();
+    vector<vector<double> > dgmap = create_default_gmap();
     vector<vector<double> > gmap = dgmap;
     vector<vector<vector<double> > > dvelmap = vel_gmap();
-    vector<vector<vector<double> > > velmap = velocityfeild(gmap, worldsize, chunk_size, dvelmap);;
+    vector<vector<vector<double> > > velmap = velocityfeild(gmap, worldsize, chunk_size, dvelmap);
 
-    sf::RenderWindow window(sf::VideoMode(1000, 600), "Space Particles");
+    RenderWindow window(VideoMode(1000, 600), "Space Particles");
     window.setVisible(true);
 
-    
+    Vector2i position = Mouse::getPosition(window);
 
-    //text.setFont(sf::Font:);
-    // sf::Text text;
-
-    // // select the font
-    // sf::Font font;
-    // font.loadFromFile("arial.ttf");
-    // text.setFont(font); // font is a sf::Font
-
-    // // set the string to display
-    // text.setString("../example_font.ttf");
-
-    // // set the character size
-    // text.setCharacterSize(100); // in pixels, not points!
-
-    // // set the color
-    // text.setFillColor(sf::Color::Blue);
-
-    // // set the text style
-    // text.setStyle(sf::Text::Bold | sf::Text::Underlined);
-
-    // text.setPosition(100, 100); 
-
-    sf::Vector2i position = sf::Mouse::getPosition(window);
-    
-    
-
-    //particles test(10, 10);
-    //auto pr;
-
-    
     //vector<vector<vector<int> > > map = chunk();
     vector<particles> allp;  
-    int seed = time(NULL);
-    srand(seed);
 
-    auto start = std::chrono::system_clock::now();
-    auto end = std::chrono::system_clock::now();
-    double dt = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    auto start = chrono::system_clock::now();
+    auto end = chrono::system_clock::now();
+    double dt = chrono::duration_cast<chrono::milliseconds>(end - start).count();
     int cx;
     int cy;
     double vxm;
@@ -381,28 +332,28 @@ int main()
     thread terminal(gameterminal);
     while (window.isOpen())
     {    
-        start = std::chrono::system_clock::now();
-        sf::Event event;
+        start = chrono::system_clock::now();
+        Event event;
         window.clear();
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::KeyPressed)
+            if (event.type == Event::KeyPressed)
         {
-            if (event.key.code == sf::Keyboard::Space)
+            if (event.key.code == Keyboard::Space)
             {
                 held = true;
             }
         }
-        if (event.type == sf::Event::KeyReleased)
+        if (event.type == Event::KeyReleased)
         {
-            if (event.key.code == sf::Keyboard::Space)
+            if (event.key.code == Keyboard::Space)
             {
                 held = false;
             }
         }
-        if (event.type == sf::Event::KeyPressed)
+        if (event.type == Event::KeyPressed)
         {
-            if (event.key.code == sf::Keyboard::S)
+            if (event.key.code == Keyboard::S)
             {
                 for (int i = 0; i < 10; i++)
                 {
@@ -416,64 +367,58 @@ int main()
                         //allp[allp.size() - 1].vx = .5;
 
                         gmap[allp[i].x/chunk_size][allp[i].y/chunk_size] += 1.0;
-        //cout << allp[i].x << endl;
-        }
-    }
+                    //cout << allp[i].x << endl;
+                    }
+                }
             }
-        }
-        if (event.type == sf::Event::KeyPressed)
-        {
-            if (event.key.code == sf::Keyboard::O)
+
+            if (event.key.code == Keyboard::O)
             {
                 allp.push_back(particles());
                 allp[allp.size() - 1].x = position.x;
                 allp[allp.size() - 1].y = position.y;
                 allp[allp.size() - 1].id = selected_id;
                 allp[allp.size() - 1].vx = 5;
-        }}
-        if (event.type == sf::Event::KeyPressed)
-        {
-            if (event.key.code == sf::Keyboard::Tab)
+            }
+
+            if (event.key.code == Keyboard::Tab)
             {
                 cout << "hello" << endl;
                 gameterminal();
             }
         }
-            if (event.type == sf::Event::Closed || event.key.code == sf::Keyboard::Escape)
+        if (event.type == Event::Closed || event.key.code == Keyboard::Escape)
             {
                 allp.push_back(particles());
                 allp[allp.size() - 1].x = -1;
                 allp[allp.size() - 1].y = -1;
-
             }
         }
-        
+
         map = dmap;
         cell_map = dmap;
         //velmap = dvelmap;
         //unidamp = pow(funidamp, (dt/20));
         //threads = dthreads;
         dt = 20;
-        
+
+        CircleShape shape;
         for (int i = 0; i < allp.size(); i++)
         {
-
             int id = allp[i].id;
-            sf::CircleShape shape(particle_details[id].size);
+            shape.setRadius(particle_details[id].size)
             shape.setOutlineThickness(particle_details[id].outline_size);
-            shape.setFillColor(sf::Color(particle_details[id].inside_r, particle_details[id].inside_g, particle_details[id].inside_b));
-            shape.setOutlineColor(sf::Color(particle_details[id].outside_r, particle_details[id].outside_g, particle_details[id].outside_b));
+            shape.setFillColor(Color(particle_details[id].inside_r, particle_details[id].inside_g, particle_details[id].inside_b));
+            shape.setOutlineColor(Color(particle_details[id].outside_r, particle_details[id].outside_g, particle_details[id].outside_b));
             shape.setPosition(allp[i].x - particle_details[id].size, allp[i].y- particle_details[id].size);
             window.draw(shape);
 
-            //window.draw(shape);
-               
             //allp[i].addgravvelocity(501, 300, -.00005 * dt);
             //allp[i].addgravvelocity(500, 300, -.00005 * dt);
-            
+
             cx = allp[i].x/chunk_size;
             cy = allp[i].y/chunk_size;
-            
+
             map[cx][cy].push_back(i);
             //cout << i << endl;
             //printvecint(map[cx][cy]);
@@ -482,70 +427,44 @@ int main()
             
             //cout << vxm << vym <<endl;
             allp[i].vx += vxm;
-            
             allp[i].vy += vym;
-            //allp[i].vy += .008;
-            // cout << gmap[cx][cy] << endl;
-            // cout << gmap[cx][cy] << endl;
-            //cout << i << '|' << velmap[cx][cy][0] << ';' << velmap[cx][cy][1] << endl;
-            
-
         }
         vector<thread> threads;
         map = change_map(map);
-        //cout << threads.size() << endl;
-        //cout << "hello" << endl;
-        //map = change_map(map);
-        //velmap = velocityfeild(gmap, worldsize, chunk_size, dvelmap);
+
         for (int i = 0; i < allp.size(); i++)
         {
             cx = allp[i].x/chunk_size;
             cy = allp[i].y/chunk_size;
-            //printvecint(map[cx][cy]); 
-            
-            //allp[i].update(dt, i, allp_adr, map[cx][cy]);
 
-            threads.emplace_back([&allp, i, dt, &allp_adr, &map]() {
-                int cx = allp[i].x / chunk_size;
-                int cy = allp[i].y / chunk_size;
-                allp[i].update(dt, i, allp_adr, map[cx][cy]);
-                });
+            threads.emplace_back(
+                [&allp, i, dt, &allp_adr, &map]() {
+                    int cx = allp[i].x / chunk_size;
+                    int cy = allp[i].y / chunk_size;
+                    allp[i].update(dt, i, allp_adr, map[cx][cy]);
+                }
+            );
 
-            //onethread(i, dt, allp_adr, map[cx][cy]);
-            //onethread();
             if (false)
             {
-            for (int a = 0; a < allp.size(); a++)
-            {
-                allp[i].addgravvelocity(allp[a].x, allp[a].y, - particle_details[allp[a].id].size * .0001);
-            }}
-            // cout << i << '|' << velmap[cx][cy][0] << ';' << velmap[cx][cy][1] << endl;
-
-            
-            // vxm = velmap[cx][cy][0];
-            // vym = velmap[cx][cy][1];
-
-
-            //th.join();
+                for (int a = 0; a < allp.size(); a++)
+                {
+                    allp[i].addgravvelocity(allp[a].x, allp[a].y, - particle_details[allp[a].id].size * .0001);
+                }
+            }
         }
         //allp.size() - 1 <<endl;
         for (auto& thread : threads) 
         {
-        thread.join();
-        }   
-        //change
-        
-        //cout << &allp << end;
+            thread.join();
+        }
+
         for (int i = 0; i < allcells.size(); i++)
         {
-            //allcells
-
-
-            sf::CircleShape shape(allcells[i].size);
-
+            shape.setRadius(allcells[i].size);
             shape.setOutlineThickness(allcells[i].outline_size);
-            shape.setFillColor(sf::Color(allcells[i].inside_r, allcells[i].inside_g, allcells[i].inside_b));
-            shape.setOutlineColor(sf::Color(allcells[i].outside_r, allcells[i].outside_g, allcells[i].outside_b));
+            shape.setFillColor(Color(allcells[i].inside_r, allcells[i].inside_g, allcells[i].inside_b));
+            shape.setOutlineColor(Color(allcells[i].outside_r, allcells[i].outside_g, allcells[i].outside_b));
             shape.setPosition(allcells[i].x - allcells[i].size, allcells[i].y- allcells[i].size);
             window.draw(shape);
             
@@ -562,7 +481,7 @@ int main()
         {
             cx = allcells[i].x/chunk_size;
             cy = allcells[i].y/chunk_size;
-            //void cell_update(int dt, int check, vector<particles> *particlesi, vector<particles> *cellsi, vector<int> particle_neerby, vector<int> cell_neerby)
+            //void cell_update(int dt, int check, vector<particles> *particlesi, vector<particles> *cellsi, vector<int> particle_nearby, vector<int> cell_nearby)
             //cout << "here" << endl;
             //printvecint(map[cx][cy]);
 
@@ -597,44 +516,7 @@ int main()
             }
         }
 
-
-
-        for (int i = 0; i < all_phermons.size(); i++)
-        {
-            //all pheremones
-
-            if (false){
-            sf::CircleShape shape(all_phermons[i].size);
-            //shape.setRadius(all_phermons[i].size);
-            shape.setOutlineThickness(all_phermons[i].outline_size);
-            shape.setFillColor(sf::Color(all_phermons[i].inside_r, all_phermons[i].inside_g, all_phermons[i].inside_b));
-            shape.setOutlineColor(sf::Color(all_phermons[i].outside_r, all_phermons[i].outside_g, all_phermons[i].outside_b));
-            shape.setPosition(all_phermons[i].x - all_phermons[i].size, all_phermons[i].y- all_phermons[i].size);
-            window.draw(shape);
-            }
-            all_phermons[i].Phermon_Update();
-            
-            // cx = allcells[i].x/chunk_size;
-            // cy = allcells[i].y/chunk_size;
-
-            // cell_map[cx][cy].push_back(i);
-            
-        }
-        //cout << all_phermons.size() << endl;
-        vector<Phermon> temp_temp_all_phermons;
-        vector<Phermon> temp_all_phermons = all_phermons;
-        all_phermons = temp_temp_all_phermons;
-
         
-        for (int i = 0; i < temp_all_phermons.size(); i++)
-        {
-            if (temp_all_phermons[i].dead == false)
-            {
-
-                all_phermons.push_back(temp_all_phermons[i]);
-            }
-        }
-
         //window.draw(text);
         if (held)
         {
@@ -645,31 +527,16 @@ int main()
             allp[allp.size() - 1].id = selected_id;
             
         }
-
-        //(vector<vector<double> > gmap, int worldsize[2], int chunk_size, vector<vector<vector<double> > > defalt)
-        
-        //cout << velmap[0][0][1] << cout << ','; cout << velmap[0][0][1] << endl;
-        
         window.display();
         vector<vector<vector<int> > > map = chunk();
         //cout << map[1][1][0] << endl;
         //out << map[1][1][0] << endl;
         //break;
-        position = sf::Mouse::getPosition(window);
-        
+        position = Mouse::getPosition(window);
         
         gmap = dgmap;
-        end = std::chrono::system_clock::now();
-        dt = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-        
-        // printf("fps: ");
-        // cout << dt << endl;
-        // printf("id: ");
-        // cout << selected_id << endl;
-        // //cout <<  allp.size() << endl;
-        // dt = 1;
-        //dt = dt * .1;
-        
+        end = chrono::system_clock::now();
+        dt = chrono::duration_cast<chrono::milliseconds>(end - start).count();
     }
     cin.get();
     return 0;
