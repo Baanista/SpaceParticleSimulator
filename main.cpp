@@ -38,31 +38,25 @@ vector<vector<vector<int> > > chunk()
     {
         cx = allp[i].x / chunk_size;
         cy = allp[i].y / chunk_size;
-        
-        //len = sizeof(map[cx][cy]) / sizeof(map[cx][cy]);
+
         map[cx][cy].push_back(i);
     }
 
-
     return(map);
-
 }
 
-vector<vector<double> > defalt_gmap()
+vector<vector<double> > create_default_gmap()
 {
     vector<vector<double> > vec(worldsize[0], vector<double>(worldsize[1]));
     for (int j = 0; j < worldsize[0]; j++) {
-      std::fill(vec[j].begin(), vec[j].end(), 0.0);
+        fill(vec[j].begin(), vec[j].end(), 0.0);
     }
     return vec;
 }
 
-
-
 vector<vector<vector<double> > > vel_gmap()
 {
-    //vector<vector<vector<int> > > vec(worldsize[0], vector<vector<int> >(worldsize[1], vector<int>(2)));
-    std::vector<std::vector<std::vector<double> > > vec(worldsize[0], std::vector<std::vector<double> >(worldsize[1], std::vector<double>(2)));
+    vector<vector<vector<double> > > vec(worldsize[0], vector<vector<double> >(worldsize[1], vector<double>(2)));
 
     for (int x = 0; x < worldsize[0]; x++)
     {
@@ -76,11 +70,6 @@ vector<vector<vector<double> > > vel_gmap()
     }
     return vec;
 }
-
-// void threadedupdate(int anount_of_thread)
-// {
-
-// }
 
 particle_detail add_particle_detail(int size, int outline_size, double damp, int inside_r, int inside_b, int inside_g, int outside_r, int outside_b, int outside_g)
 {
@@ -98,7 +87,7 @@ particle_detail add_particle_detail(int size, int outline_size, double damp, int
     connection zero_connection;
     zero_connection.attraction = 0;
     zero_connection.distance = 0;
-    
+
     for (int i = 0; i < max_particle_types; i++)
     {
         output_details.connections.push_back(zero_connection);
@@ -226,19 +215,13 @@ void gameterminal()
             particle_detail tempdetails = add_particle_detail(size, outline_size, damp, inside_r, inside_b, inside_g,outside_r, outside_b, outside_g);
         }
     }
-}  
+}
 
 void onethread(int dt, int check, vector<particles> *particlesi, vector<int> neerby)
 {
-    cout << "test";
     //allp[i].update(dt, i, allp_adr, map[cx][cy]);
     allp[check].update(dt, check, particlesi, neerby);
 }
-// void onethread()
-// {
-//     cout << "test";
-// }
-
 
 int main()
 {
@@ -287,7 +270,7 @@ int main()
     tempcell.mutation_rate = .1;
     // particle_detail[0].connection[0].id = 0;
     // particle_detail[0].connection[0].dist = 10;
-    // particle_detail[0].connection[0].attraction = 0.001;    
+    // particle_detail[0].connection[0].attraction = 0.001;
     tempcell.energy = 100;
 
     allcells.push_back(tempcell);
@@ -298,48 +281,20 @@ int main()
     vector<vector<vector<int> > > cell_map(worldsize[0], vector<vector<int> >(worldsize[1]));
     vector<vector<vector<int> > > cell_dmap(worldsize[0], vector<vector<int> >(worldsize[1]));
 
-    int randomthing = random_in_range(0, 10);
-    cout << randomthing << endl;
-    vector<vector<double> > dgmap = defalt_gmap();
+    vector<vector<double> > dgmap = create_default_gmap();
     vector<vector<double> > gmap = dgmap;
     vector<vector<vector<double> > > dvelmap = vel_gmap();
-    vector<vector<vector<double> > > velmap = velocityfeild(gmap, worldsize, chunk_size, dvelmap);;
+    vector<vector<vector<double> > > velmap = velocityfeild(gmap, worldsize, chunk_size, dvelmap);
 
     sf::RenderWindow window(sf::VideoMode(1000, 600), "Space Particles");
     window.setVisible(true);
 
-    
-
-    //text.setFont(sf::Font:);
-    // sf::Text text;
-
-    // // select the font
-    // sf::Font font;
-    // font.loadFromFile("arial.ttf");
-    // text.setFont(font); // font is a sf::Font
-
-    // // set the string to display
-    // text.setString("../example_font.ttf");
-
-    // // set the character size
-    // text.setCharacterSize(100); // in pixels, not points!
-
-    // // set the color
-    // text.setFillColor(sf::Color::Blue);
-
-    // // set the text style
-    // text.setStyle(sf::Text::Bold | sf::Text::Underlined);
-
-    // text.setPosition(100, 100); 
-
     sf::Vector2i position = sf::Mouse::getPosition(window);
-    
-    
+
 
     //particles test(10, 10);
     //auto pr;
 
-    
     //vector<vector<vector<int> > > map = chunk();
     vector<particles> allp;  
     
@@ -400,9 +355,7 @@ int main()
                     }
                 }
             }
-        }
-        if (event.type == sf::Event::KeyPressed)
-        {
+
             if (event.key.code == sf::Keyboard::O)
             {
                 allp.push_back(particles());
@@ -411,16 +364,14 @@ int main()
                 allp[allp.size() - 1].id = selected_id;
                 allp[allp.size() - 1].vx = 5;
             }
-        }
-        if (event.type == sf::Event::KeyPressed)
-        {
+
             if (event.key.code == sf::Keyboard::Tab)
             {
                 cout << "hello" << endl;
                 gameterminal();
             }
         }
-            if (event.type == sf::Event::Closed || event.key.code == sf::Keyboard::Escape)
+        if (event.type == sf::Event::Closed || event.key.code == sf::Keyboard::Escape)
             {
                 allp.push_back(particles());
                 allp[allp.size() - 1].x = -1;
@@ -448,14 +399,12 @@ int main()
             shape.setPosition(allp[i].x - particle_details[id].size, allp[i].y- particle_details[id].size);
             window.draw(shape);
 
-            //window.draw(shape);
-               
             //allp[i].addgravvelocity(501, 300, -.00005 * dt);
             //allp[i].addgravvelocity(500, 300, -.00005 * dt);
-            
+
             cx = allp[i].x/chunk_size;
             cy = allp[i].y/chunk_size;
-            
+
             map[cx][cy].push_back(i);
             //cout << i << endl;
             //printvecint(map[cx][cy]);
@@ -464,7 +413,6 @@ int main()
             
             //cout << vxm << vym <<endl;
             allp[i].vx += vxm;
-            
             allp[i].vy += vym;
             //allp[i].vy += .008;
             // cout << gmap[cx][cy] << endl;
@@ -487,23 +435,26 @@ int main()
             
             //allp[i].update(dt, i, allp_adr, map[cx][cy]);
 
-            threads.emplace_back([&allp, i, dt, &allp_adr, &map]() {
-                int cx = allp[i].x / chunk_size;
-                int cy = allp[i].y / chunk_size;
-                allp[i].update(dt, i, allp_adr, map[cx][cy]);
-                });
+            threads.emplace_back(
+                [&allp, i, dt, &allp_adr, &map]() {
+                    int cx = allp[i].x / chunk_size;
+                    int cy = allp[i].y / chunk_size;
+                    allp[i].update(dt, i, allp_adr, map[cx][cy]);
+                }
+            );
 
             //onethread(i, dt, allp_adr, map[cx][cy]);
             //onethread();
             if (false)
             {
-            for (int a = 0; a < allp.size(); a++)
-            {
-                allp[i].addgravvelocity(allp[a].x, allp[a].y, - particle_details[allp[a].id].size * .0001);
-            }}
+                for (int a = 0; a < allp.size(); a++)
+                {
+                    allp[i].addgravvelocity(allp[a].x, allp[a].y, - particle_details[allp[a].id].size * .0001);
+                }
+            }
             // cout << i << '|' << velmap[cx][cy][0] << ';' << velmap[cx][cy][1] << endl;
 
-            
+
             // vxm = velmap[cx][cy][0];
             // vym = velmap[cx][cy][1];
 
@@ -514,17 +465,16 @@ int main()
         for (auto& thread : threads) 
         {
         thread.join();
-        }   
+        }
         //change
-        
+
         //cout << &allp << end;
         for (int i = 0; i < allcells.size(); i++)
         {
             //allcells
 
 
-            sf::CircleShape shape(allcells[i].size);
-
+            shape.setRadius(allcells[i].size);
             shape.setOutlineThickness(allcells[i].outline_size);
             shape.setFillColor(sf::Color(allcells[i].inside_r, allcells[i].inside_g, allcells[i].inside_b));
             shape.setOutlineColor(sf::Color(allcells[i].outside_r, allcells[i].outside_g, allcells[i].outside_b));
