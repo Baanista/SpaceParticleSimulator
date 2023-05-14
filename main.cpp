@@ -7,7 +7,7 @@
 #include "particle.hpp"
 #include "preformance.hpp"
 #include "debughelp.hpp"
-
+#include <cstdlib>
 #include <stdio.h>
 #include<tuple>
 #include <vector>
@@ -25,7 +25,7 @@ vector<Cell> allcells;
 vector<Cell> *allcells_adr = &allcells;
 vector<particle_detail> particle_details;
 vector<particles> *allp_adr = &allp;
-
+vector<Phermon> all_phermons;
 
 vector<vector<vector<int> > > chunk()
 {
@@ -256,7 +256,7 @@ int main()
     Cell tempcell;
     tempcell.size = 1000;
     tempcell.max_size = 5;
-    tempcell.outline_size = 2;
+    tempcell.outline_size = 1;
     tempcell.inside_r = 0;
     tempcell.inside_b = 0;
     tempcell.inside_g = 0;
@@ -267,13 +267,31 @@ int main()
 
     tempcell.x = 100;
     tempcell.y= 100;
-    tempcell.mutation_rate = .1;
+    tempcell.mutation_rate = .02;
     // particle_detail[0].connection[0].id = 0;
     // particle_detail[0].connection[0].dist = 10;
     // particle_detail[0].connection[0].attraction = 0.001;
     tempcell.energy = 100;
 
     allcells.push_back(tempcell);
+
+
+    Phermon defalt_phermone;
+    defalt_phermone.size = 1;
+    defalt_phermone.outline_size = 0;
+    defalt_phermone.inside_r = 255;
+    defalt_phermone.inside_b = 0;
+    defalt_phermone.inside_g = 0;
+
+    defalt_phermone.outside_r = 255;
+    defalt_phermone.outside_b = 255;
+    defalt_phermone.outside_g = 255;
+
+    defalt_phermone.x = 100;
+    defalt_phermone.y= 100;
+    defalt_phermone.vx = 10;
+    defalt_phermone.vy= 10;
+    defalt_phermone.duration = 40;
 
     vector<vector<vector<int> > > map(worldsize[0], vector<vector<int> >(worldsize[1]));
     vector<vector<vector<int> > > dmap(worldsize[0], vector<vector<int> >(worldsize[1]));
@@ -297,7 +315,9 @@ int main()
 
     //vector<vector<vector<int> > > map = chunk();
     vector<particles> allp;  
-    
+    int seed = time(NULL);
+    srand(seed);
+
     auto start = std::chrono::system_clock::now();
     auto end = std::chrono::system_clock::now();
     double dt = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
@@ -488,6 +508,8 @@ int main()
             
         }
         cell_map = change_map(cell_map);
+
+
         for (int i = 0; i < allcells.size(); i++)
         {
             cx = allcells[i].x/chunk_size;
@@ -498,6 +520,11 @@ int main()
 
             //cout << allcells_adr << endl;
             allcells[i].cell_update(dt, i, allp_adr, allcells_adr, map[cx][cy], cell_map[cx][cy]);
+            defalt_phermone.x = allcells[i].x;
+            defalt_phermone.y = allcells[i].y;
+            defalt_phermone.vx = allcells[i].vx * 5;
+            defalt_phermone.vy = allcells[i].vy * 5;
+            //all_phermons.push_back(defalt_phermone);
             if (allcells[i].size > allcells[i].max_size)
             {
                 allcells[i].energy = allcells[i].max_size * allcells[i].max_size * .45;
@@ -522,7 +549,44 @@ int main()
             }
         }
 
+
+
+        for (int i = 0; i < all_phermons.size(); i++)
+        {
+            //all pheremones
+
+            if (false){
+            sf::CircleShape shape(all_phermons[i].size);
+            //shape.setRadius(all_phermons[i].size);
+            shape.setOutlineThickness(all_phermons[i].outline_size);
+            shape.setFillColor(sf::Color(all_phermons[i].inside_r, all_phermons[i].inside_g, all_phermons[i].inside_b));
+            shape.setOutlineColor(sf::Color(all_phermons[i].outside_r, all_phermons[i].outside_g, all_phermons[i].outside_b));
+            shape.setPosition(all_phermons[i].x - all_phermons[i].size, all_phermons[i].y- all_phermons[i].size);
+            window.draw(shape);
+            }
+            all_phermons[i].Phermon_Update();
+            
+            // cx = allcells[i].x/chunk_size;
+            // cy = allcells[i].y/chunk_size;
+
+            // cell_map[cx][cy].push_back(i);
+            
+        }
+        //cout << all_phermons.size() << endl;
+        vector<Phermon> temp_temp_all_phermons;
+        vector<Phermon> temp_all_phermons = all_phermons;
+        all_phermons = temp_temp_all_phermons;
+
         
+        for (int i = 0; i < temp_all_phermons.size(); i++)
+        {
+            if (temp_all_phermons[i].dead == false)
+            {
+
+                all_phermons.push_back(temp_all_phermons[i]);
+            }
+        }
+
         //window.draw(text);
         if (held)
         {
