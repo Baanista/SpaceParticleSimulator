@@ -16,7 +16,7 @@ int random_in_range(int lower_bound, int upper_bound) {
     srand(rand());
 
     // Generate a random number between lower_bound and upper_bound, inclusive
-    int random_number = lower_bound + std::rand() % (upper_bound - lower_bound + 1);
+    int random_number = lower_bound + rand() % (upper_bound - lower_bound + 1);
 
     return random_number;
 }
