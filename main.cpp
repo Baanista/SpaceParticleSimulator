@@ -376,10 +376,9 @@ int main()
                 allp.push_back(particles());
                 allp[allp.size() - 1].x = -1;
                 allp[allp.size() - 1].y = -1;
-
             }
         }
-        
+
         map = dmap;
         cell_map = dmap;
         //velmap = dvelmap;
@@ -414,19 +413,10 @@ int main()
             //cout << vxm << vym <<endl;
             allp[i].vx += vxm;
             allp[i].vy += vym;
-            //allp[i].vy += .008;
-            // cout << gmap[cx][cy] << endl;
-            // cout << gmap[cx][cy] << endl;
-            //cout << i << '|' << velmap[cx][cy][0] << ';' << velmap[cx][cy][1] << endl;
-            
-
         }
         vector<thread> threads;
         map = change_map(map);
-        //cout << threads.size() << endl;
-        //cout << "hello" << endl;
-        //map = change_map(map);
-        //velmap = velocityfeild(gmap, worldsize, chunk_size, dvelmap);
+
         for (int i = 0; i < allp.size(); i++)
         {
             cx = allp[i].x/chunk_size;

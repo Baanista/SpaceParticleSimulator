@@ -71,22 +71,21 @@ vector<vector<vector<double> > > velocityfeild(vector<vector<double> > gmap, int
         for (int y = 0; y < gmap[0].size(); y++)
         {
                 
-                for (int i = 0; i < gmap.size(); i++)
+            for (int i = 0; i < gmap.size(); i++)
+            {
+                for (int a = 0; a < gmap[0].size(); a++)
                 {
-                    for (int a = 0; a < gmap[0].size(); a++)
-                    {
-                        //cout << x << ',' << y << endl;
-                        //cout << gmap[i][a] << endl;
-                        pair<double, double> temp = addgravvelocityfeild(x, y, i, a, gmap[i][a], chunk_size);
-                        out[x][y][0] += temp.first * -.0000001;
-                        out[x][y][1] += temp.second * -.0000001;
-                        //cout << temp.first << ';' << temp.second << '|' << '2' << endl;
-                        //cout << gmap[i][a] << ':' << temp.first << ',' << temp.second << endl;
-                    }
+                    //cout << x << ',' << y << endl;
+                    //cout << gmap[i][a] << endl;
+                    pair<double, double> temp = addgravvelocityfeild(x, y, i, a, gmap[i][a], chunk_size);
+                    out[x][y][0] += temp.first * -.0000001;
+                    out[x][y][1] += temp.second * -.0000001;
+                    //cout << temp.first << ';' << temp.second << '|' << '2' << endl;
+                    //cout << gmap[i][a] << ':' << temp.first << ',' << temp.second << endl;
                 }
             }
+        }
     }
-
     return out;
 }
 
