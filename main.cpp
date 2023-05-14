@@ -396,9 +396,9 @@ int main()
                         //allp[allp.size() - 1].vx = .5;
 
                         gmap[allp[i].x/chunk_size][allp[i].y/chunk_size] += 1.0;
-        //cout << allp[i].x << endl;
-        }
-    }
+                    //cout << allp[i].x << endl;
+                    }
+                }
             }
         }
         if (event.type == sf::Event::KeyPressed)
@@ -410,7 +410,8 @@ int main()
                 allp[allp.size() - 1].y = position.y;
                 allp[allp.size() - 1].id = selected_id;
                 allp[allp.size() - 1].vx = 5;
-        }}
+            }
+        }
         if (event.type == sf::Event::KeyPressed)
         {
             if (event.key.code == sf::Keyboard::Tab)
@@ -434,12 +435,13 @@ int main()
         //unidamp = pow(funidamp, (dt/20));
         //threads = dthreads;
         dt = 20;
-        
+
+        sf::CircleShape shape;
         for (int i = 0; i < allp.size(); i++)
         {
 
             int id = allp[i].id;
-            sf::CircleShape shape(particle_details[id].size);
+            shape.setRadius(particle_details[id].size)
             shape.setOutlineThickness(particle_details[id].outline_size);
             shape.setFillColor(sf::Color(particle_details[id].inside_r, particle_details[id].inside_g, particle_details[id].inside_b));
             shape.setOutlineColor(sf::Color(particle_details[id].outside_r, particle_details[id].outside_g, particle_details[id].outside_b));
