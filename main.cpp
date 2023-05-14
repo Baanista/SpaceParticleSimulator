@@ -7,7 +7,7 @@
 #include "particle.hpp"
 #include "preformance.hpp"
 #include "debughelp.hpp"
-
+#include <cstdlib>
 #include <stdio.h>
 #include<tuple>
 #include <vector>
@@ -27,7 +27,7 @@ vector<Cell> allcells;
 vector<Cell> *allcells_adr = &allcells;
 vector<particle_detail> particle_details;
 vector<particles> *allp_adr = &allp;
-
+vector<Phermon> all_phermons;
 
 vector<vector<vector<int> > > chunk()
 {
@@ -258,7 +258,7 @@ int main()
     Cell tempcell;
     tempcell.size = 1000;
     tempcell.max_size = 5;
-    tempcell.outline_size = 2;
+    tempcell.outline_size = 1;
     tempcell.inside_r = 0;
     tempcell.inside_b = 0;
     tempcell.inside_g = 0;
@@ -269,13 +269,31 @@ int main()
 
     tempcell.x = 100;
     tempcell.y= 100;
-    tempcell.mutation_rate = .1;
+    tempcell.mutation_rate = .02;
     // particle_detail[0].connection[0].id = 0;
     // particle_detail[0].connection[0].dist = 10;
     // particle_detail[0].connection[0].attraction = 0.001;
     tempcell.energy = 100;
 
     allcells.push_back(tempcell);
+
+
+    Phermon defalt_phermone;
+    defalt_phermone.size = 1;
+    defalt_phermone.outline_size = 0;
+    defalt_phermone.inside_r = 255;
+    defalt_phermone.inside_b = 0;
+    defalt_phermone.inside_g = 0;
+
+    defalt_phermone.outside_r = 255;
+    defalt_phermone.outside_b = 255;
+    defalt_phermone.outside_g = 255;
+
+    defalt_phermone.x = 100;
+    defalt_phermone.y= 100;
+    defalt_phermone.vx = 10;
+    defalt_phermone.vy= 10;
+    defalt_phermone.duration = 40;
 
     vector<vector<vector<int> > > map(worldsize[0], vector<vector<int> >(worldsize[1]));
     vector<vector<vector<int> > > dmap(worldsize[0], vector<vector<int> >(worldsize[1]));
@@ -461,6 +479,8 @@ int main()
             
         }
         cell_map = change_map(cell_map);
+
+
         for (int i = 0; i < allcells.size(); i++)
         {
             cx = allcells[i].x/chunk_size;
@@ -471,6 +491,11 @@ int main()
 
             //cout << allcells_adr << endl;
             allcells[i].cell_update(dt, i, allp_adr, allcells_adr, map[cx][cy], cell_map[cx][cy]);
+            defalt_phermone.x = allcells[i].x;
+            defalt_phermone.y = allcells[i].y;
+            defalt_phermone.vx = allcells[i].vx * 5;
+            defalt_phermone.vy = allcells[i].vy * 5;
+            //all_phermons.push_back(defalt_phermone);
             if (allcells[i].size > allcells[i].max_size)
             {
                 allcells[i].energy = allcells[i].max_size * allcells[i].max_size * .45;
@@ -495,6 +520,8 @@ int main()
             }
         }
 
+        
+        //window.draw(text);
         if (held)
         {
             allp.push_back(particles());
