@@ -333,18 +333,43 @@ class particles
 class Phermon: public particles{
     public:
         int id = 2;
-    
+
+        double size;
         int inside_r;
         int inside_g;
         int inside_b;
 
+        double outline_size;
         int outside_r;
         int outside_g;
         int outside_b;
+
         int duration;
+        int time = 0;
+
+        bool dead = false;
 
 
-        // Phermon()
+        void Phermon_Update()
+        {
+            x += vx;// * dt;
+            y += vy;// * dt;
+            
+
+            // vx *= damper;
+            // vy *= damper;
+            //cout << particle_details[id].damp << endl;
+            vx *= particle_details[id].damp;
+            vy *= particle_details[id].damp;
+
+            time += 1;
+            if (time >= duration)
+            {
+                dead = true;
+            }
+            
+            check_border();
+        }
 
 
 };
@@ -589,7 +614,7 @@ class Cell: public particles{
                     particlesi->at(a).check_border();
                     if (p.size*2 < temp_size)
                     {
-                        cout << "eaten" << endl;
+                        //cout << "eaten" << endl;
                         energy += p.energy * .5;
                         p.energy = 0;
                         p.size = 0;
@@ -598,7 +623,7 @@ class Cell: public particles{
                     if (temp_size*2 < p.size)
                     {
                         
-                        cout << "eaten" << endl;
+                        //cout << "eaten" << endl;
                         p.energy += energy * .5;
                         energy = 0;
                         size = 0;
@@ -698,7 +723,7 @@ class Cell: public particles{
             //cout << "rbgf" << outputcell.inside_r << ", " << outputcell.inside_g << ", " << outputcell.inside_b << endl;
             if (randomFloat() < mutation_rate)
             {
-                cout << "mut" << endl;
+                //cout << "mut" << endl;
                 int mut_amount = 50;
                 outputcell.inside_r += random_in_range(-mut_amount, mut_amount);
                 
