@@ -311,13 +311,9 @@ int main()
 
     Vector2i position = Mouse::getPosition(window);
 
-
-    //particles test(10, 10);
-    //auto pr;
-
     //vector<vector<vector<int> > > map = chunk();
     vector<particles> allp;  
-    
+
     auto start = chrono::system_clock::now();
     auto end = chrono::system_clock::now();
     double dt = chrono::duration_cast<chrono::milliseconds>(end - start).count();
