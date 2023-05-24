@@ -575,8 +575,7 @@ class Cell: public particles{
             for (int j = 0; j < 8; j++){
                 for (int i = 0; i < nearby.size(); i++)
                 {
-<<<<<<< HEAD
-                a = neerby[i];
+                a = nearby[i];
                 //a = i;  
                 //cout << a << endl;
                 p = particlesi->at(a);
@@ -613,7 +612,6 @@ class Cell: public particles{
 
                     particlesi->at(a).check_border();
                     if (p.size*2 < temp_size)
-=======
                     a = nearby[i];
                     //a = i;  
                     //cout << a << endl;
@@ -623,16 +621,15 @@ class Cell: public particles{
                     dist = sqrt(dx*dx + dy*dy);
                     int (particles::*Pmove)(double, double, double, double);
                     if (dist <= size + p.size && dist != 0)
->>>>>>> 41f3bc264bfe9c4f7eeb16caa80feaac8b8b7207
                     {
                         attractiontemp = ((size + p.size) - dist) * .5;
 
                         tvx = vx;
                         tvy = vy;
                         collisions ++;
-                        circle_collision_result(dist, p.x, p.y, p.vx, p.vy, p.size, size);
+                        circle_collision_result(dist, p.x, p.y, p.vx, p.vy, p.size, size, id);
                         p.collisions ++;
-                        particlesi->at(a).circle_collision_result(dist, x, y, tvx, tvy, size, p.size);
+                        particlesi->at(a).circle_collision_result(dist, x, y, tvx, tvy, size, p.size, p.id);
 
 
                         move(p.x, p.y, dist, attractiontemp);
@@ -658,7 +655,7 @@ class Cell: public particles{
                         }
                     }
                 }
-            }
+            }}
             //x += vx;
             //y += vy;      
             //cout << 'd';
@@ -689,21 +686,14 @@ class Cell: public particles{
 		{
             //FUTURE USE
 		}
-<<<<<<< HEAD
+
         void cell_update(int dt, int check, vector<particles> *particlesi, vector<Cell> *cellsi, vector<int> particle_neerby, vector<int> cell_neerby)
         {
             id = 0;
-            cout << "bid" << id << endl;
             Particle_Update(dt, check, particlesi, particle_neerby);
-            cout << "aid" << id << endl;
-            Cell_Update(dt, check, cellsi, cell_neerby);
-=======
 
-        void cell_update(int dt, int check, vector<particles> *particlesi, vector<Cell> *cellsi, vector<int> particle_nearby, vector<int> cell_nearby)
-        {  
-            Particle_Update(dt, check, particlesi, particle_nearby);
-            Cell_Update(dt, check, cellsi, cell_nearby);
->>>>>>> 41f3bc264bfe9c4f7eeb16caa80feaac8b8b7207
+            Cell_Update(dt, check, cellsi, cell_neerby);
+
             energy += .002 * dt;
             if (random_in_range(0, 1) == 0)
             {

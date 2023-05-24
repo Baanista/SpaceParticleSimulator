@@ -1,4 +1,3 @@
-
 #include <SFML/Graphics.hpp>
 #include "SFML/Window.hpp"
 #include <SFML/Graphics/Color.hpp>
