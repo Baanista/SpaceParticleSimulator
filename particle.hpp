@@ -14,7 +14,7 @@ using namespace std;
 // extern vector<particle_details> particle_detail;
 extern int worldsize[2];
 extern int chunk_size;
-double walldamp = .1;
+double walldamp = 1;
 
 
 
@@ -28,6 +28,7 @@ struct particle_detail
     int size;
     int outline_size;
     double damp;
+    double collision_damp;
 
     int inside_r;
     int inside_g;
@@ -156,8 +157,8 @@ class particles
                     
                     tvx = vx;
                     tvy = vy;
-                    circle_collision_result(dist, p.x, p.y, p.vx, p.vy, particle_details[p.id].size, particle_details[id].size);
-                    particlesi->at(a).circle_collision_result(dist, x, y, tvx, tvy, particle_details[id].size, particle_details[p.id].size);
+                    circle_collision_result(dist, p.x, p.y, p.vx, p.vy, particle_details[p.id].size, particle_details[id].size, id);
+                    particlesi->at(a).circle_collision_result(dist, x, y, tvx, tvy, particle_details[id].size, particle_details[p.id].size, p.id);
 
                     move(p.x, p.y, dist, attractiontemp);
                     particlesi->at(a).move(x, y, dist, attractiontemp);
@@ -236,7 +237,7 @@ class particles
             
         }
 
-        void circle_collision_result(double distance, double ox, double oy, double other_velocityx, double other_velocityy, double other_mass, double our_size)
+        void circle_collision_result(double distance, double ox, double oy, double other_velocityx, double other_velocityy, double other_mass, double our_size, int inID)
         {
             
             double mass = our_size;
@@ -263,10 +264,12 @@ class particles
             double v2x_new = v2n_new * unx + v2t * utx;
             double v2y_new = v2n_new * uny + v2t * uty;
             
-
+            
             // assign the new velocities to the global variables
-            vx = v1x_new;
-            vy = v1y_new;
+
+            vx += (v1x_new - vx) * particle_details[inID].collision_damp;
+            vy += (v1y_new - vy) * particle_details[inID].collision_damp;
+
         }
 
 
@@ -470,9 +473,8 @@ class Cell: public particles{
                     tvx = vx;
                     tvy = vy;
                     
-                    circle_collision_result(dist, p.x, p.y, p.vx, p.vy, particle_details[p.id].size, size);
-                    
-                    particlesi->at(a).circle_collision_result(dist, x, y, tvx, tvy, size, particle_details[p.id].size);
+                    circle_collision_result(dist, p.x, p.y, p.vx, p.vy, particle_details[p.id].size, particle_details[id].size, id);
+                    particlesi->at(a).circle_collision_result(dist, x, y, tvx, tvy, particle_details[id].size, particle_details[p.id].size, p.id);
                     
 
                     move(p.x, p.y, dist, attractiontemp);
@@ -511,7 +513,7 @@ class Cell: public particles{
 
         void Cell_Update(int dt, int check, vector<Cell> *particlesi, vector<int> nearby)
         {
-
+            
             
 
             x += vx;// * dt;
@@ -559,6 +561,7 @@ class Cell: public particles{
 
                 //old:
                 neeraddvelocity(p.x, p.y, particle_details[id].connections[p.id].attraction, particle_details[id].connections[p.id].distance * .25 * size, dist);
+                
                 //new:
                 //neeraddvelocity(p.x, p.y, particle_details[id].connections[p.id].attraction, size + 5, dist);
 
@@ -572,6 +575,45 @@ class Cell: public particles{
             for (int j = 0; j < 8; j++){
                 for (int i = 0; i < nearby.size(); i++)
                 {
+<<<<<<< HEAD
+                a = neerby[i];
+                //a = i;  
+                //cout << a << endl;
+                p = particlesi->at(a);
+                dx = x - p.x;
+                dy = y - p.y;
+                dist = sqrt(dx*dx + dy*dy);
+                int (particles::*Pmove)(double, double, double, double);
+                if (dist <= size + p.size && dist != 0)
+                {
+                    
+                    //cout << '8008' << endl;
+                    // power = 1 / sqrt(vx*vx + vy*vy);
+                    // //cout << vx << ',' << vy << endl;
+                    // addvelocity(p.x, p.y, power * .5);
+                    // p.addvelocity(x, y, power * .5);
+                    
+                    attractiontemp = ((size + p.size) - dist) * .5;
+                    
+                    
+                    tvx = vx;
+                    tvy = vy;
+                    
+                    collisions ++;
+                    id = 0;
+                    cout << "end" << endl;
+                    circle_collision_result(dist, p.x, p.y, p.vx, p.vy, p.size, size, id);
+                    
+                    p.collisions ++;
+                    particlesi->at(a).circle_collision_result(dist, x, y, tvx, tvy, size, p.size, p.id);
+                    
+
+                    move(p.x, p.y, dist, attractiontemp);
+                    particlesi->at(a).move(x, y, dist, attractiontemp);
+
+                    particlesi->at(a).check_border();
+                    if (p.size*2 < temp_size)
+=======
                     a = nearby[i];
                     //a = i;  
                     //cout << a << endl;
@@ -581,6 +623,7 @@ class Cell: public particles{
                     dist = sqrt(dx*dx + dy*dy);
                     int (particles::*Pmove)(double, double, double, double);
                     if (dist <= size + p.size && dist != 0)
+>>>>>>> 41f3bc264bfe9c4f7eeb16caa80feaac8b8b7207
                     {
                         attractiontemp = ((size + p.size) - dist) * .5;
 
@@ -646,11 +689,21 @@ class Cell: public particles{
 		{
             //FUTURE USE
 		}
+<<<<<<< HEAD
+        void cell_update(int dt, int check, vector<particles> *particlesi, vector<Cell> *cellsi, vector<int> particle_neerby, vector<int> cell_neerby)
+        {
+            id = 0;
+            cout << "bid" << id << endl;
+            Particle_Update(dt, check, particlesi, particle_neerby);
+            cout << "aid" << id << endl;
+            Cell_Update(dt, check, cellsi, cell_neerby);
+=======
 
         void cell_update(int dt, int check, vector<particles> *particlesi, vector<Cell> *cellsi, vector<int> particle_nearby, vector<int> cell_nearby)
         {  
             Particle_Update(dt, check, particlesi, particle_nearby);
             Cell_Update(dt, check, cellsi, cell_nearby);
+>>>>>>> 41f3bc264bfe9c4f7eeb16caa80feaac8b8b7207
             energy += .002 * dt;
             if (random_in_range(0, 1) == 0)
             {
@@ -678,6 +731,7 @@ class Cell: public particles{
 
         Cell reproduce(Cell Input_Cell)
         {
+            cout << "dupe" << endl;
             Cell outputcell = Input_Cell;
             
             

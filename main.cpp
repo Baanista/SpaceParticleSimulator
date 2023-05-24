@@ -7,6 +7,7 @@
 #include "particle.hpp"
 #include "preformance.hpp"
 #include "debughelp.hpp"
+#include "brain.hpp"
 #include <cstdlib>
 #include <stdio.h>
 #include<tuple>
@@ -73,12 +74,22 @@ vector<vector<vector<double> > > vel_gmap()
     return vec;
 }
 
+<<<<<<< HEAD
+// void threadedupdate(int anount_of_thread)
+// {
+
+// }
+
+particle_detail add_particle_detail(int size, int outline_size, double damp, double collision_damp, int inside_r, int inside_b, int inside_g, int outside_r, int outside_b, int outside_g)
+=======
 particle_detail add_particle_detail(int size, int outline_size, double damp, int inside_r, int inside_b, int inside_g, int outside_r, int outside_b, int outside_g)
+>>>>>>> 41f3bc264bfe9c4f7eeb16caa80feaac8b8b7207
 {
     particle_detail output_details;
     output_details.size =size;
     output_details.outline_size =outline_size;
     output_details.damp = damp;
+    output_details.collision_damp = collision_damp;
     output_details.inside_r = inside_r;
     output_details.inside_b = inside_b;
     output_details.inside_g = inside_g;
@@ -190,6 +201,7 @@ void gameterminal()
             int size;
             int outline_size;
             double damp;
+            double collision_damp;
             int inside_r;
             int inside_b;
             int inside_g;
@@ -202,6 +214,8 @@ void gameterminal()
             cin >> outline_size;
             cout << "damp: ";
             cin >> damp;
+            cout << "collision_damp: ";
+            cin >> collision_damp;
             cout << "inside_r: ";
             cin >> inside_r;
             cout << "inside_b: ";
@@ -214,7 +228,7 @@ void gameterminal()
             cin >> outside_b;
             cout << "outside_g: ";
             cin >> outside_g;
-            particle_detail tempdetails = add_particle_detail(size, outline_size, damp, inside_r, inside_b, inside_g,outside_r, outside_b, outside_g);
+            particle_detail tempdetails = add_particle_detail(size, outline_size, damp, collision_damp, inside_r, inside_b, inside_g,outside_r, outside_b, outside_g);
         }
     }
 }
@@ -227,24 +241,24 @@ void onethread(int dt, int check, vector<particles> *particlesi, vector<int> nea
 
 int main()
 {
-    particle_detail tempdetails = add_particle_detail(10, 0, .9, 255, 255, 255, 255, 0, 0);
+    particle_detail tempdetails = add_particle_detail(10, 0, 1, .1, 255, 255, 255, 255, 0, 0);
     tempdetails.connections[0].attraction = -.01;
     tempdetails.connections[0].distance = 25;
     tempdetails.connections[1].attraction = -.1;
     tempdetails.connections[1].distance = 40;
     particle_details.push_back(tempdetails);
     
-    tempdetails = add_particle_detail(5, 0, .99, 255, 255, 0, 255, 255, 255);
+    tempdetails = add_particle_detail(5, 0, 1, .5, 255, 255, 0, 255, 255, 255);
     tempdetails.connections[1].attraction = -.02;
     tempdetails.connections[1].distance = 40;
     tempdetails.connections[0].attraction = .01;
     tempdetails.connections[0].distance = 20;
     particle_details.push_back(tempdetails);
-    tempdetails = add_particle_detail(3, 0, 1, 0, 255, 0, 0, 0, 255);
-    tempdetails.connections[2].attraction = .001;
-    tempdetails.connections[2].distance = 20;
+    tempdetails = add_particle_detail(3, 0, 1, .5, 0, 255, 0, 0, 0, 255);
+    tempdetails.connections[2].attraction = .01;
+    tempdetails.connections[2].distance = 40;
     particle_details.push_back(tempdetails);
-    tempdetails = add_particle_detail(3, 0, 1, 0, 255, 0, 0, 0, 255);
+    tempdetails = add_particle_detail(3, 0, 1, .5, 0, 255, 0, 0, 0, 255);
     particle_details.push_back(tempdetails);
     // particle_details[0].size = 5;
     // particle_details[0].r = 255;
@@ -256,6 +270,7 @@ int main()
     // particle_detail[0].connection[0].dist = 10;
     // particle_detail[0].connection[0].attraction = 0.001;    
     Cell tempcell;
+    tempcell.id = 0;
     tempcell.size = 1000;
     tempcell.max_size = 5;
     tempcell.outline_size = 1;
@@ -269,7 +284,7 @@ int main()
 
     tempcell.x = 100;
     tempcell.y= 100;
-    tempcell.mutation_rate = .02;
+    tempcell.mutation_rate = .05;
     // particle_detail[0].connection[0].id = 0;
     // particle_detail[0].connection[0].dist = 10;
     // particle_detail[0].connection[0].attraction = 0.001;
@@ -491,7 +506,7 @@ int main()
             defalt_phermone.y = allcells[i].y;
             defalt_phermone.vx = allcells[i].vx * 5;
             defalt_phermone.vy = allcells[i].vy * 5;
-            //all_phermons.push_back(defalt_phermone);
+            all_phermons.push_back(defalt_phermone);
             if (allcells[i].size > allcells[i].max_size)
             {
                 allcells[i].energy = allcells[i].max_size * allcells[i].max_size * .45;
