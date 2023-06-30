@@ -5,11 +5,12 @@
 #include<tuple>
 #include <vector>
 #include "particle.hpp"
-using namespace std;
 #include <cstdlib>  // for rand and srand
 #include <ctime>    // for time
 #include <printf.h>
 #include <stdio.h>
+
+using namespace std;
 
 int random_in_range(int lower_bound, int upper_bound) {
     // Seed the random number generator with the current time

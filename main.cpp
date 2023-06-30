@@ -59,13 +59,12 @@ vector<vector<double> > create_default_gmap()
 vector<vector<vector<double> > > vel_gmap()
 {
     vector<vector<vector<double> > > vec(worldsize[0], vector<vector<double> >(worldsize[1], vector<double>(2)));
-
     for (int x = 0; x < worldsize[0]; x++)
     {
         for (int y = 0; y < worldsize[1]; y++)
         {
-                vec[x][y][0] = 0;
-                vec[x][y][1] = 0;
+            vec[x][y][0] = 0;
+            vec[x][y][1] = 0;
         }
     }
     return vec;
@@ -76,7 +75,7 @@ vector<vector<vector<double> > > vel_gmap()
 particle_detail add_particle_detail(int size, int outline_size, double damp, double collision_damp, int inside_r, int inside_b, int inside_g, int outside_r, int outside_b, int outside_g)
 {
     particle_detail output_details;
-    output_details.size =size;
+    output_details.size = size;
     output_details.outline_size =outline_size;
     output_details.damp = damp;
     output_details.collision_damp = collision_damp;
@@ -221,7 +220,6 @@ void gameterminal()
 
 void onethread(int dt, int check, vector<particles> *particlesi, vector<int> nearby)
 {
-    //allp[i].update(dt, i, allp_adr, map[cx][cy]);
     allp[check].update(dt, check, particlesi, nearby);
 }
 
@@ -267,7 +265,6 @@ int main()
 
     allcells.push_back(tempcell);
 
-
     Phermon defalt_phermone;
     defalt_phermone.size = 1;
     defalt_phermone.outline_size = 0;
@@ -300,8 +297,6 @@ int main()
     window.setVisible(true);
 
     Vector2i position = Mouse::getPosition(window);
-
-    //vector<vector<vector<int> > > map = chunk();
     vector<particles> allp;  
 
     auto start = chrono::system_clock::now();
@@ -313,7 +308,6 @@ int main()
     double vym;
     bool held = false;
 
-    //vector<particle_details> *pd = &particle_detail;
     double funidamp = .9999;
     double unidamp = 1;
     thread terminal(gameterminal);
@@ -329,7 +323,7 @@ int main()
                 held = event.type == Event::KeyPressed;
             }
 
-            if (event.type == Event::KeyPressed && event.key.code == Keyboard::S)
+            if (event.key.code == Keyboard::S)
             {
                 for (int i = 0; i < 10; i++)
                 {
@@ -338,9 +332,7 @@ int main()
                         allp.push_back(particles());
                         allp[allp.size() - 1].x = (particle_details[selected_id].size * 2) * i + position.x;
                         allp[allp.size() - 1].y = (particle_details[selected_id].size * 2) * a + position.y;
-                        //allp[allp.size() - 1].damp = unidamp;
                         allp[allp.size() - 1].id = selected_id;
-                        //allp[allp.size() - 1].vx = .5;
 
                         gmap[allp[i].x/chunk_size][allp[i].y/chunk_size] += 1.0;
                     }
@@ -470,7 +462,6 @@ int main()
         allcells.push_back(temp_allcells[i]);
         }
     }
-
         
     if (held)
     {

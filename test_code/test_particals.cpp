@@ -23,18 +23,13 @@ struct connections
 
 struct particle_details
 {
-    
-
-    //int color[3];
     double size;
     double damp;
-    //sh::Color color(0, 0, 255);
     vector<connections> connection;
 };
 
 int main()
 {
-    
     vector<particle_details> particle_detail;
     
     particle_detail[0].size = 5;
