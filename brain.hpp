@@ -28,15 +28,10 @@ class Nuron
                 output = 0;
             }
             
-
             return(output);
         }
 
-<<<<<<< HEAD
         void Mutate(double change_amount_weight, int change_amount_Pass_Down, int biggest_element, float turn_2_int_chance)
-=======
-        void Mutate(double change_amount_weight, int change_amount_Pass_Down, int biggest_element)
->>>>>>> 0212e9cd089fed41578e4726f1e856d08efe29c6
         {
             w1 += Positive_and_Negative_randomFloat() * change_amount_weight;
             w2 += Positive_and_Negative_randomFloat() * change_amount_weight;
@@ -48,19 +43,11 @@ class Nuron
             Pass_Down[1] += random_in_range(-change_amount_Pass_Down, change_amount_Pass_Down);
             Pass_Down[2] += random_in_range(-change_amount_Pass_Down, change_amount_Pass_Down);
 
-<<<<<<< HEAD
-            if (Pass_Down[0] < 0){Pass_Down[0] = 0;}if (Pass_Down[0] > biggest_element){{Pass_Down[0] = biggest_element - 1;}}
-
-            if (Pass_Down[1] < 0){Pass_Down[1] = 0;}if (Pass_Down[1] > biggest_element){{Pass_Down[1] = biggest_element - 1;}}
-        
-            if (Pass_Down[2] < 0){Pass_Down[2] = 0;}if (Pass_Down[2] >= biggest_element){{Pass_Down[0] = biggest_element - 1;}}
-=======
             if (Pass_Down[0] < 0){Pass_Down[0] = 0}if (Pass_Down[0] > biggest_element){{Pass_Down[0] = biggest_element - 1}}
 
             if (Pass_Down[1] < 0){Pass_Down[1] = 0}if (Pass_Down[1] > biggest_element){{Pass_Down[1] = biggest_element - 1}}
         
             if (Pass_Down[2] < 0){Pass_Down[2] = 0}if (Pass_Down[2] >= biggest_element){{Pass_Down[0] = biggest_element - 1}}
->>>>>>> 0212e9cd089fed41578e4726f1e856d08efe29c6
         }
 }
 
@@ -76,8 +63,6 @@ class Cell_Responce_Mechanism()
             {
                 next_Pass_Down = Nurons[i].activate();
                 Nurons.input = next_Pass_Down
-                
-<<<<<<< HEAD
             }
         }
 
@@ -91,8 +76,6 @@ class Cell_Responce_Mechanism()
                     Nurons.push_back();
                 }
                 Nurons()
-=======
->>>>>>> 0212e9cd089fed41578e4726f1e856d08efe29c6
             }
         }
 }

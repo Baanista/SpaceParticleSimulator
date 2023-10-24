@@ -59,33 +59,23 @@ vector<vector<double> > create_default_gmap()
 vector<vector<vector<double> > > vel_gmap()
 {
     vector<vector<vector<double> > > vec(worldsize[0], vector<vector<double> >(worldsize[1], vector<double>(2)));
-
     for (int x = 0; x < worldsize[0]; x++)
     {
         for (int y = 0; y < worldsize[1]; y++)
         {
-            for (int i = 0; i < 2; i++)
-            {
-                vec[x][y][i] = 0;
-            }
+            vec[x][y][0] = 0;
+            vec[x][y][1] = 0;
         }
     }
     return vec;
 }
 
-<<<<<<< HEAD
-// void threadedupdate(int anount_of_thread)
-// {
 
-// }
 
 particle_detail add_particle_detail(int size, int outline_size, double damp, double collision_damp, int inside_r, int inside_b, int inside_g, int outside_r, int outside_b, int outside_g)
-=======
-particle_detail add_particle_detail(int size, int outline_size, double damp, int inside_r, int inside_b, int inside_g, int outside_r, int outside_b, int outside_g)
->>>>>>> 41f3bc264bfe9c4f7eeb16caa80feaac8b8b7207
 {
     particle_detail output_details;
-    output_details.size =size;
+    output_details.size = size;
     output_details.outline_size =outline_size;
     output_details.damp = damp;
     output_details.collision_damp = collision_damp;
@@ -127,71 +117,67 @@ void gameterminal()
         }
         else if (command == "edit")
         {
-            
             string edit_commands;
             int edit_id = selected_id;
             int connection_id;
             while (edit_commands != "end")
             {
-            cout << "e>";
-            if (edit_commands == "id")
-            {
-                cin >> edit_id;
-            }
-            if (edit_commands == "size")
-            {
-                cout << particle_details[edit_id].size;
-                cin >> particle_details[edit_id].size;
-                cout << particle_details[edit_id].size;
-            }
-            if (edit_commands == "outline_size")
-            {
-                cin >> particle_details[edit_id].outline_size;
-            }
-            if (edit_commands == "outline_size")
-            {
-                cin >> particle_details[edit_id].outline_size;
-            }
-            if (edit_commands == "damp")
-            {
-                cin >> particle_details[edit_id].damp;
-            }
-            if (edit_commands == "inside_r")
-            {
-                cin >> particle_details[edit_id].inside_r;
-            }
-                
-            
-            if (edit_commands == "inside_b")
-            {
-                cin >> particle_details[edit_id].inside_b;
-            };
-            if (edit_commands == "inside_g")
-            {
-                cin >> particle_details[edit_id].inside_g;
-            }
-            if (edit_commands == "outside_r")
-            {
-                cin >> particle_details[edit_id].outside_r;
-            }
-            if (edit_commands == "outside_b")
-            {
-                cin >> particle_details[edit_id].outside_b;
-            }
-            if (edit_commands == "outside_g")
-            {
-                cin >> particle_details[edit_id].outside_g;
-            }
-            if (edit_commands == "connections")
-            {
-                cout << "id connection you are editing:";
-                cin >> connection_id;
-                cout << "Distance:";
-                cin >> particle_details[edit_id].connections[connection_id].distance;
-                cout << "Attraction:";
-                cin >> particle_details[edit_id].connections[connection_id].attraction;
-            }
-            
+                cout << "e>";
+                if (edit_commands == "id")
+                {
+                    cin >> edit_id;
+                }
+                if (edit_commands == "size")
+                {
+                    cout << particle_details[edit_id].size;
+                    cin >> particle_details[edit_id].size;
+                    cout << particle_details[edit_id].size;
+                }
+                if (edit_commands == "outline_size")
+                {
+                    cin >> particle_details[edit_id].outline_size;
+                }
+                if (edit_commands == "outline_size")
+                {
+                    cin >> particle_details[edit_id].outline_size;
+                }
+                if (edit_commands == "damp")
+                {
+                    cin >> particle_details[edit_id].damp;
+                }
+                if (edit_commands == "inside_r")
+                {
+                    cin >> particle_details[edit_id].inside_r;
+                }
+                if (edit_commands == "inside_b")
+                {
+                    cin >> particle_details[edit_id].inside_b;
+                };
+                if (edit_commands == "inside_g")
+                {
+                    cin >> particle_details[edit_id].inside_g;
+                }
+                if (edit_commands == "outside_r")
+                {
+                    cin >> particle_details[edit_id].outside_r;
+                }
+                if (edit_commands == "outside_b")
+                {
+                    cin >> particle_details[edit_id].outside_b;
+                }
+                if (edit_commands == "outside_g")
+                {
+                    cin >> particle_details[edit_id].outside_g;
+                }
+                if (edit_commands == "connections")
+                {
+                    cout << "id connection you are editing:";
+                    cin >> connection_id;
+                    cout << "Distance:";
+                    cin >> particle_details[edit_id].connections[connection_id].distance;
+                    cout << "Attraction:";
+                    cin >> particle_details[edit_id].connections[connection_id].attraction;
+                }
                 cin >> edit_commands;
             }
         }
@@ -234,7 +220,6 @@ void gameterminal()
 
 void onethread(int dt, int check, vector<particles> *particlesi, vector<int> nearby)
 {
-    //allp[i].update(dt, i, allp_adr, map[cx][cy]);
     allp[check].update(dt, check, particlesi, nearby);
 }
 
@@ -259,15 +244,7 @@ int main()
     particle_details.push_back(tempdetails);
     tempdetails = add_particle_detail(3, 0, 1, .5, 0, 255, 0, 0, 0, 255);
     particle_details.push_back(tempdetails);
-    // particle_details[0].size = 5;
-    // particle_details[0].r = 255;
-    // particle_details[0].b = 255;
-    // particle_details[0].g = 255;
-    // particle_detail[0].connection[0];
-    
-    // particle_detail[0].connection[0].id = 0;
-    // particle_detail[0].connection[0].dist = 10;
-    // particle_detail[0].connection[0].attraction = 0.001;    
+
     Cell tempcell;
     tempcell.id = 0;
     tempcell.size = 1000;
@@ -284,13 +261,9 @@ int main()
     tempcell.x = 100;
     tempcell.y= 100;
     tempcell.mutation_rate = .05;
-    // particle_detail[0].connection[0].id = 0;
-    // particle_detail[0].connection[0].dist = 10;
-    // particle_detail[0].connection[0].attraction = 0.001;
     tempcell.energy = 100;
 
     allcells.push_back(tempcell);
-
 
     Phermon defalt_phermone;
     defalt_phermone.size = 1;
@@ -324,8 +297,6 @@ int main()
     window.setVisible(true);
 
     Vector2i position = Mouse::getPosition(window);
-
-    //vector<vector<vector<int> > > map = chunk();
     vector<particles> allp;  
 
     auto start = chrono::system_clock::now();
@@ -336,37 +307,22 @@ int main()
     double vxm;
     double vym;
     bool held = false;
-    //char v = 'v';
-    vector<particles> *allp_adr = &allp;
-    //vector<particle_details> *pd = &particle_detail;
+
     double funidamp = .9999;
     double unidamp = 1;
-    // vector<thread> threads;
-    // vector<thread> dthreads;
     thread terminal(gameterminal);
     while (window.isOpen())
-    {    
+    {
         start = chrono::system_clock::now();
         Event event;
         window.clear();
         while (window.pollEvent(event))
         {
-            if (event.type == Event::KeyPressed)
-        {
             if (event.key.code == Keyboard::Space)
             {
-                held = true;
+                held = event.type == Event::KeyPressed;
             }
-        }
-        if (event.type == Event::KeyReleased)
-        {
-            if (event.key.code == Keyboard::Space)
-            {
-                held = false;
-            }
-        }
-        if (event.type == Event::KeyPressed)
-        {
+
             if (event.key.code == Keyboard::S)
             {
                 for (int i = 0; i < 10; i++)
@@ -376,12 +332,9 @@ int main()
                         allp.push_back(particles());
                         allp[allp.size() - 1].x = (particle_details[selected_id].size * 2) * i + position.x;
                         allp[allp.size() - 1].y = (particle_details[selected_id].size * 2) * a + position.y;
-                        //allp[allp.size() - 1].damp = unidamp;
                         allp[allp.size() - 1].id = selected_id;
-                        //allp[allp.size() - 1].vx = .5;
 
                         gmap[allp[i].x/chunk_size][allp[i].y/chunk_size] += 1.0;
-                    //cout << allp[i].x << endl;
                     }
                 }
             }
@@ -402,156 +355,130 @@ int main()
             }
         }
         if (event.type == Event::Closed || event.key.code == Keyboard::Escape)
-            {
-                allp.push_back(particles());
-                allp[allp.size() - 1].x = -1;
-                allp[allp.size() - 1].y = -1;
-            }
-        }
-
-        map = dmap;
-        cell_map = dmap;
-        //velmap = dvelmap;
-        //unidamp = pow(funidamp, (dt/20));
-        //threads = dthreads;
-        dt = 20;
-
-        CircleShape shape;
-        for (int i = 0; i < allp.size(); i++)
-        {
-            int id = allp[i].id;
-            shape.setRadius(particle_details[id].size)
-            shape.setOutlineThickness(particle_details[id].outline_size);
-            shape.setFillColor(Color(particle_details[id].inside_r, particle_details[id].inside_g, particle_details[id].inside_b));
-            shape.setOutlineColor(Color(particle_details[id].outside_r, particle_details[id].outside_g, particle_details[id].outside_b));
-            shape.setPosition(allp[i].x - particle_details[id].size, allp[i].y- particle_details[id].size);
-            window.draw(shape);
-
-            //allp[i].addgravvelocity(501, 300, -.00005 * dt);
-            //allp[i].addgravvelocity(500, 300, -.00005 * dt);
-
-            cx = allp[i].x/chunk_size;
-            cy = allp[i].y/chunk_size;
-
-            map[cx][cy].push_back(i);
-            //cout << i << endl;
-            //printvecint(map[cx][cy]);
-            gmap[cx][cy] += 100.0;
-            //cout << velmap[cx][cy][0] << ';' << velmap[cx][cy][1] << endl;
-            
-            //cout << vxm << vym <<endl;
-            allp[i].vx += vxm;
-            allp[i].vy += vym;
-        }
-        vector<thread> threads;
-        map = change_map(map);
-
-        for (int i = 0; i < allp.size(); i++)
-        {
-            cx = allp[i].x/chunk_size;
-            cy = allp[i].y/chunk_size;
-
-            threads.emplace_back(
-                [&allp, i, dt, &allp_adr, &map]() {
-                    int cx = allp[i].x / chunk_size;
-                    int cy = allp[i].y / chunk_size;
-                    allp[i].update(dt, i, allp_adr, map[cx][cy]);
-                }
-            );
-
-            if (false)
-            {
-                for (int a = 0; a < allp.size(); a++)
-                {
-                    allp[i].addgravvelocity(allp[a].x, allp[a].y, - particle_details[allp[a].id].size * .0001);
-                }
-            }
-        }
-        //allp.size() - 1 <<endl;
-        for (auto& thread : threads) 
-        {
-            thread.join();
-        }
-
-        for (int i = 0; i < allcells.size(); i++)
-        {
-            shape.setRadius(allcells[i].size);
-            shape.setOutlineThickness(allcells[i].outline_size);
-            shape.setFillColor(Color(allcells[i].inside_r, allcells[i].inside_g, allcells[i].inside_b));
-            shape.setOutlineColor(Color(allcells[i].outside_r, allcells[i].outside_g, allcells[i].outside_b));
-            shape.setPosition(allcells[i].x - allcells[i].size, allcells[i].y- allcells[i].size);
-            window.draw(shape);
-            
-            cx = allcells[i].x/chunk_size;
-            cy = allcells[i].y/chunk_size;
-
-            cell_map[cx][cy].push_back(i);
-            
-        }
-        cell_map = change_map(cell_map);
-
-
-        for (int i = 0; i < allcells.size(); i++)
-        {
-            cx = allcells[i].x/chunk_size;
-            cy = allcells[i].y/chunk_size;
-            //void cell_update(int dt, int check, vector<particles> *particlesi, vector<particles> *cellsi, vector<int> particle_nearby, vector<int> cell_nearby)
-            //cout << "here" << endl;
-            //printvecint(map[cx][cy]);
-
-            //cout << allcells_adr << endl;
-            allcells[i].cell_update(dt, i, allp_adr, allcells_adr, map[cx][cy], cell_map[cx][cy]);
-            defalt_phermone.x = allcells[i].x;
-            defalt_phermone.y = allcells[i].y;
-            defalt_phermone.vx = allcells[i].vx * 5;
-            defalt_phermone.vy = allcells[i].vy * 5;
-            all_phermons.push_back(defalt_phermone);
-            if (allcells[i].size > allcells[i].max_size)
-            {
-                allcells[i].energy = allcells[i].max_size * allcells[i].max_size * .45;
-                Cell next_cell = allcells[i];
-                next_cell = next_cell.reproduce(next_cell);
-                next_cell.check_border();
-                allcells.push_back(next_cell);
-            }
-
-        }
-        
-        vector<Cell> temp_temp_allcells;
-        vector<Cell> temp_allcells = allcells;
-        allcells = temp_temp_allcells;
-
-        //cout << temp_allcells.size() << endl;
-        for (int i = 0; i < temp_allcells.size(); i++)
-        {
-            if (allcells[i].dead == false)
-            {
-                allcells.push_back(temp_allcells[i]);
-            }
-        }
-
-        
-        //window.draw(text);
-        if (held)
         {
             allp.push_back(particles());
-            allp[allp.size() - 1].x = position.x;
-            allp[allp.size() - 1].y = position.y;
-            //allp[allp.size() - 1].damp = unidamp;
-            allp[allp.size() - 1].id = selected_id;
-            
+            allp[allp.size() - 1].x = -1;
+            allp[allp.size() - 1].y = -1;
         }
-        window.display();
-        vector<vector<vector<int> > > map = chunk();
-        //cout << map[1][1][0] << endl;
-        //out << map[1][1][0] << endl;
-        //break;
-        position = Mouse::getPosition(window);
-        
-        gmap = dgmap;
-        end = chrono::system_clock::now();
-        dt = chrono::duration_cast<chrono::milliseconds>(end - start).count();
     }
+
+    map = dmap;
+    cell_map = dmap;
+    dt = 20;
+
+    CircleShape shape;
+    for (int i = 0; i < allp.size(); i++)
+    {
+        int id = allp[i].id;
+        shape.setRadius(particle_details[id].size)
+        shape.setOutlineThickness(particle_details[id].outline_size);
+        shape.setFillColor(Color(particle_details[id].inside_r, particle_details[id].inside_g, particle_details[id].inside_b));
+        shape.setOutlineColor(Color(particle_details[id].outside_r, particle_details[id].outside_g, particle_details[id].outside_b));
+        shape.setPosition(allp[i].x - particle_details[id].size, allp[i].y- particle_details[id].size);
+        window.draw(shape);
+
+        cx = allp[i].x/chunk_size;
+        cy = allp[i].y/chunk_size;
+
+        map[cx][cy].push_back(i);
+        gmap[cx][cy] += 100.0;
+
+        allp[i].vx += vxm;
+        allp[i].vy += vym;
+    }
+    vector<thread> threads;
+    map = change_map(map);
+
+    for (int i = 0; i < allp.size(); i++)
+    {
+        cx = allp[i].x/chunk_size;
+        cy = allp[i].y/chunk_size;
+
+        threads.emplace_back(
+            [&allp, i, dt, &allp_adr, &map]() {
+                int cx = allp[i].x / chunk_size;
+                int cy = allp[i].y / chunk_size;
+                allp[i].update(dt, i, allp_adr, map[cx][cy]);
+            }
+        );
+
+
+        /*
+        for (int a = 0; a < allp.size(); a++)
+        {
+            allp[i].addgravvelocity(allp[a].x, allp[a].y, - particle_details[allp[a].id].size * .0001);
+        }
+        */
+    }
+    for (auto& thread : threads) 
+    {
+        thread.join();
+    }
+
+    for (int i = 0; i < allcells.size(); i++)
+    {
+        shape.setRadius(allcells[i].size);
+        shape.setOutlineThickness(allcells[i].outline_size);
+        shape.setFillColor(Color(allcells[i].inside_r, allcells[i].inside_g, allcells[i].inside_b));
+        shape.setOutlineColor(Color(allcells[i].outside_r, allcells[i].outside_g, allcells[i].outside_b));
+        shape.setPosition(allcells[i].x - allcells[i].size, allcells[i].y- allcells[i].size);
+        window.draw(shape);
+            
+        cx = allcells[i].x/chunk_size;
+        cy = allcells[i].y/chunk_size;
+        cell_map[cx][cy].push_back(i);  
+    }
+    cell_map = change_map(cell_map);
+
+    for (int i = 0; i < allcells.size(); i++)
+    {
+        cx = allcells[i].x/chunk_size;
+        cy = allcells[i].y/chunk_size;
+
+        allcells[i].cell_update(dt, i, allp_adr, allcells_adr, map[cx][cy], cell_map[cx][cy]);
+        defalt_phermone.x = allcells[i].x;
+        defalt_phermone.y = allcells[i].y;
+        defalt_phermone.vx = allcells[i].vx * 5;
+        defalt_phermone.vy = allcells[i].vy * 5;
+        all_phermons.push_back(defalt_phermone);
+        if (allcells[i].size > allcells[i].max_size)
+        {
+            allcells[i].energy = allcells[i].max_size * allcells[i].max_size * .45;
+            Cell next_cell = allcells[i];
+            next_cell = next_cell.reproduce(next_cell);
+            next_cell.check_border();
+            allcells.push_back(next_cell);
+        }
+    }
+        
+    vector<Cell> temp_temp_allcells;
+    vector<Cell> temp_allcells = allcells;
+    allcells = temp_temp_allcells;
+
+    for (int i = 0; i < temp_allcells.size(); i++)
+    {
+        if (!allcells[i].dead)
+        {
+        allcells.push_back(temp_allcells[i]);
+        }
+    }
+        
+    if (held)
+    {
+        allp.push_back(particles());
+        allp[allp.size() - 1].x = position.x;
+        allp[allp.size() - 1].y = position.y;
+        //allp[allp.size() - 1].damp = unidamp;
+        allp[allp.size() - 1].id = selected_id;        
+    }
+    window.display();
+    vector<vector<vector<int> > > map = chunk();
+    position = Mouse::getPosition(window);
+        
+    gmap = dgmap;
+    end = chrono::system_clock::now();
+    dt = chrono::duration_cast<chrono::milliseconds>(end - start).count();
+
     cin.get();
     return 0;
 }    
