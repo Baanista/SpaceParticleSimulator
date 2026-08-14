@@ -1,10 +1,12 @@
+
+
 # OverView
 
 This program is meant to simulate particle physics and evolutionary patterns.
 
 here is my discord(https://discord.gg/xYbyAZScMG)
 
-# Runing the Program
+# Running the Program
 
 1.) in terminal go into the projects directory
 
@@ -50,10 +52,3 @@ Every cell inherits the properties of the particle ID 0. Each cell has a genome.
 	-Input: The inputs are energy, lifetime, size, maxsize, and pheromone chunk details.
 	
 	-Output: The cell controls the details of the emitted pheromones. The cell can also control its direction. The cell can also control how much they go in that direction.
-
-
-
-
-
-
-
